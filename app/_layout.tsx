@@ -9,6 +9,7 @@ import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
 import { useAuth } from "../hooks/useAuth";
+import { AuthScreen } from "../screens/AuthScreen";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -61,9 +62,7 @@ function RootLayoutNav() {
   ) : (
     // Login
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-      </Stack>
+      <AuthScreen />
     </ThemeProvider>
   );
 }
