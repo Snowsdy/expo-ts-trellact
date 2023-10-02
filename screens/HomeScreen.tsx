@@ -6,14 +6,12 @@ import Colors from "../constants/Colors";
 import { Input } from "@rneui/base";
 import { FontAwesome } from "@expo/vector-icons";
 import { Button } from "@rneui/themed";
-import { auth, signIn } from "../api/auth";
+import { router } from "expo-router";
 
-export const LoginScreen = () => {
+export const HomeScreen = () => {
   const colorScheme = useColorScheme();
   const [emailErr, setEmailErr] = useState("");
   const [passwdErr, setpasswdErr] = useState("");
-  const [emailField, setEmailField] = useState("");
-  const [passwdField, setPasswdField] = useState("");
 
   return (
     <SafeAreaView
@@ -39,7 +37,7 @@ export const LoginScreen = () => {
               marginBottom: 16,
             }}
           />
-          <Text style={styles.title}>Log In</Text>
+          <Text style={styles.title}>Sign Up</Text>
           <View
             style={[
               styles.separator,
@@ -49,8 +47,6 @@ export const LoginScreen = () => {
             ]}
           />
           <Input
-            value={emailField}
-            onChangeText={setEmailField}
             containerStyle={{
               paddingHorizontal: 0,
               width: "auto",
@@ -76,8 +72,6 @@ export const LoginScreen = () => {
             errorMessage={emailErr}
           />
           <Input
-            value={passwdField}
-            onChangeText={setPasswdField}
             containerStyle={{
               paddingHorizontal: 0,
               width: "auto",
@@ -112,9 +106,9 @@ export const LoginScreen = () => {
             radius={"sm"}
             type="solid"
             onPress={() => {
-              signIn(emailField, passwdField);
+              router.push("/home");
             }}>
-            Log In
+            Sign Up
           </Button>
         </View>
       </View>
