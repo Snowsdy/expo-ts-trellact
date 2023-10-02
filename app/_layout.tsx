@@ -8,8 +8,6 @@ import { useFonts } from "expo-font";
 import { SplashScreen, Stack } from "expo-router";
 import { useEffect } from "react";
 import { useColorScheme } from "react-native";
-import { useAuth } from "../hooks/useAuth";
-import { AuthScreen } from "../screens/AuthScreen";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -50,19 +48,13 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
-  const { user } = useAuth();
 
-  return user ? (
+  return (
     // Home
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       </Stack>
-    </ThemeProvider>
-  ) : (
-    // Login
-    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <AuthScreen />
     </ThemeProvider>
   );
 }

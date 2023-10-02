@@ -3,4 +3,5 @@ export type TaskType = {
   title: string;
   images: [string];
   description: string;
+  color: string | undefined;
 };

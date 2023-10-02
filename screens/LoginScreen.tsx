@@ -7,7 +7,7 @@ import { Input } from "@rneui/base";
 import { FontAwesome } from "@expo/vector-icons";
 import { Button } from "@rneui/themed";
 
-export const AuthScreen = () => {
+export const LoginScreen = () => {
   const colorScheme = useColorScheme();
   const [emailErr, setEmailErr] = useState("");
   const [passwdErr, setpasswdErr] = useState("");
@@ -36,7 +36,7 @@ export const AuthScreen = () => {
               marginBottom: 16,
             }}
           />
-          <Text style={styles.title}>Sign Up</Text>
+          <Text style={styles.title}>Log In</Text>
           <View
             style={[
               styles.separator,
@@ -108,7 +108,7 @@ export const AuthScreen = () => {
               setEmailErr("Et non !");
               setpasswdErr("Non plus !");
             }}>
-            Sign Up
+            Log In
           </Button>
         </View>
       </View>
