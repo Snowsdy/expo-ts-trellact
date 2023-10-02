@@ -9,6 +9,8 @@ import { Button } from "@rneui/themed";
 import { router } from "expo-router";
 import { auth } from "../api/auth";
 
+
+
 export const AuthScreen = () => {
   const colorScheme = useColorScheme();
   const [emailErr, setEmailErr] = useState("");
@@ -17,20 +19,9 @@ export const AuthScreen = () => {
   const [passwdField, setPasswdField] = useState("");
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: Colors[colorScheme ?? "light"].background,
-      }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors[colorScheme ?? "light"].background }}>
       <View style={styles.container}>
-        <View
-          style={{
-            borderWidth: 2,
-            borderColor: Colors[colorScheme ?? "light"].tint,
-            padding: 16,
-            borderRadius: 16,
-            width: "80%",
-          }}>
+        <View style={{ borderWidth: 2, borderColor: Colors[colorScheme ?? "light"].tint, padding: 16, borderRadius: 16, width: "80%", }}>
           <Image
             source={require("../assets/images/login.png")}
             style={{
@@ -62,13 +53,7 @@ export const AuthScreen = () => {
               color: Colors[colorScheme ?? "light"].text,
             }}
             leftIcon={
-              <FontAwesome
-                name="user"
-                style={{
-                  color: Colors[colorScheme ?? "light"].text,
-                }}
-                size={24}
-              />
+              <FontAwesome name="user" size={24} style={{ color: Colors[colorScheme ?? "light"].text, }} />
             }
             leftIconContainerStyle={{ marginRight: 8 }}
             label={"Email"}
@@ -99,22 +84,11 @@ export const AuthScreen = () => {
             secureTextEntry={true}
             errorMessage={passwdErr}
             leftIcon={
-              <FontAwesome
-                name="lock"
-                style={{
-                  color: Colors[colorScheme ?? "light"].text,
-                }}
-                size={24}
-              />
+              <FontAwesome name="lock" size={24} style={{ color: Colors[colorScheme ?? "light"].text, }} />
             }
             leftIconContainerStyle={{ marginRight: 8 }}
           />
-          <Button
-            radius={"sm"}
-            type="solid"
-            onPress={() => {
-              auth(emailField, passwdField);
-            }}>
+          <Button radius={"sm"} type="solid" onPress={() => { auth(emailField, passwdField); }}>
             Sign Up
           </Button>
         </View>
@@ -122,6 +96,8 @@ export const AuthScreen = () => {
     </SafeAreaView>
   );
 };
+
+
 
 const styles = StyleSheet.create({
   container: {
