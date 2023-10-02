@@ -19,21 +19,26 @@ export default function TabLayout() {
 
   return (
     <Tabs
+      safeAreaInsets={{ top: 8, right: 8, bottom: 8, left: 8 }}
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: "Tab One",
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          title: "Log In",
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="user-circle" color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="two"
         options={{
-          title: "Tab Two",
-          tabBarIcon: ({ color }) => <TabBarIcon name="search" color={color} />,
+          title: "Sign Up",
+          tabBarIcon: ({ color }) => (
+            <TabBarIcon name="pencil-square-o" color={color} />
+          ),
         }}
       />
     </Tabs>
