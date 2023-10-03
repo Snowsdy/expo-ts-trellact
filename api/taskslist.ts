@@ -11,6 +11,10 @@ import { db } from "../config/firebase";
 import { TaskListType } from "../types/TaskListType";
 import { TaskType } from "../types/TaskType";
 
+/**
+ * Return a promise to let the opportunity to show a notification which alert the user of the added item.
+ * @param tasksList
+ */
 export async function addTasksList(tasksList: TaskListType) {
   try {
     const docRef = await addDoc(collection(db, "taskslist"), {
@@ -23,6 +27,9 @@ export async function addTasksList(tasksList: TaskListType) {
   }
 }
 
+/**
+ * Return a promise which contains all TaskLists from Firebase
+ */
 export async function getTasksLists() {
   const querySnapshot = await getDocs(collection(db, "taskslist"));
   let taskslists: TaskListType[] = [];
@@ -43,7 +50,14 @@ export async function getTasksLists() {
 
 export async function getTaskListById(id: string) {
   const taskslistRef = doc(db, "taskslist", id);
-  return await getDoc(taskslistRef);
+  const querySnapshot = await getDoc(taskslistRef);
+  const tasksList: TaskListType = {
+    id: querySnapshot.id,
+    tasks: querySnapshot.get("tasks") as TaskType[],
+    title: querySnapshot.get("title") as string,
+  };
+
+  return tasksList;
 }
 
 export async function updateTaskList(taskslist: TaskType) {
