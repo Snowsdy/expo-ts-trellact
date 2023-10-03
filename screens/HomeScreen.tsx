@@ -9,7 +9,7 @@ import { Text, View } from "../components/Themed";
 import Colors from "../constants/Colors";
 import { useAuth } from "../hooks/useAuth";
 import { TaskType } from "../types/TaskType";
-import { updateTask } from "../api/tasks";
+import { getTaskById, updateTask } from "../api/tasks";
 
 export const HomeScreen = () => {
   const colorScheme = useColorScheme();
@@ -107,37 +107,7 @@ export const HomeScreen = () => {
             }
             leftIconContainerStyle={{ marginRight: 8 }}
           />
-          <Button
-            radius={"sm"}
-            type="solid"
-            onPress={() => {
-              router.push("/home");
-              const task: TaskType = {
-                id: "jgZYVkzXKNRhWcTr584g",
-                badges: [
-                  {
-                    id: "Eb5QSlXSgaRWNzpe1Pe8",
-                    color: "#52D433",
-                    title: "1st badge",
-                  },
-                ],
-                color: "#25FAE5",
-                description: "Ceci est une description.",
-                images: [
-                  "https://picsum.photos/200/300",
-                  "https://picsum.photos/300/300",
-                  "https://picsum.photos/500/300",
-                ],
-                title: "1st Task TOTOTOTOTTO",
-              };
-              updateTask(task)
-                .then(() => {
-                  console.log("Transaction successfully committed!");
-                })
-                .catch((error) => {
-                  console.log("Transaction failed: ", error);
-                });
-            }}>
+          <Button radius={"sm"} type="solid" onPress={() => {}}>
             Test Ajout DB
           </Button>
         </View>

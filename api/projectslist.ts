@@ -3,6 +3,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   runTransaction,
 } from "firebase/firestore";
@@ -22,6 +23,11 @@ export async function addProject(projectList: ProjectType, uid: string) {
   } catch (e) {
     console.error("Error adding document: ", e);
   }
+}
+
+export async function getProjectById(id: string) {
+  const projectRef = doc(db, "projectslist", id);
+  return await getDoc(projectRef);
 }
 
 export async function getProjects() {
