@@ -3,6 +3,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   runTransaction,
 } from "firebase/firestore";
@@ -44,6 +45,11 @@ export async function getTasks() {
   return {
     tasks,
   };
+}
+
+export async function getTaskById(id: string) {
+  const taskRef = doc(db, "tasks", id);
+  return await getDoc(taskRef);
 }
 
 export async function updateTask(task: TaskType) {

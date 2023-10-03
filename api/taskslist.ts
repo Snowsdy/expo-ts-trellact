@@ -3,6 +3,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   runTransaction,
 } from "firebase/firestore";
@@ -38,6 +39,11 @@ export async function getTasksLists() {
   return {
     taskslists,
   };
+}
+
+export async function getTaskListById(id: string) {
+  const taskslistRef = doc(db, "taskslist", id);
+  return await getDoc(taskslistRef);
 }
 
 export async function updateTaskList(taskslist: TaskType) {

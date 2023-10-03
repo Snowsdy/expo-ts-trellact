@@ -3,6 +3,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   runTransaction,
 } from "firebase/firestore";
@@ -37,6 +38,11 @@ export async function getBadges() {
   return {
     tasks,
   };
+}
+
+export async function getBadgeById(id: string) {
+  const badgeRef = doc(db, "badges", id);
+  return await getDoc(badgeRef);
 }
 
 export async function updateBadge(badge: BadgeType) {
