@@ -1,16 +1,25 @@
-import React, { useState } from "react";
-import { Text, View } from "../components/Themed";
-import { Image, Platform, StyleSheet, useColorScheme } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import Colors from "../constants/Colors";
-import { Input } from "@rneui/base";
 import { FontAwesome } from "@expo/vector-icons";
+import { Input } from "@rneui/base";
 import { Button } from "@rneui/themed";
+import React, { useState } from "react";
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  useColorScheme,
+  Keyboard,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Text, View } from "../components/Themed";
+import Colors from "../constants/Colors";
+import { auth } from "../api/auth";
 
 export const AuthScreen = () => {
   const colorScheme = useColorScheme();
   const [emailErr, setEmailErr] = useState("");
   const [passwdErr, setpasswdErr] = useState("");
+  const [emailField, setEmailField] = useState("");
+  const [passwdField, setPasswdField] = useState("");
 
   return (
     <SafeAreaView
@@ -46,6 +55,8 @@ export const AuthScreen = () => {
             ]}
           />
           <Input
+            value={emailField}
+            onChangeText={setEmailField}
             containerStyle={{
               paddingHorizontal: 0,
               width: "auto",
@@ -71,6 +82,8 @@ export const AuthScreen = () => {
             errorMessage={emailErr}
           />
           <Input
+            value={passwdField}
+            onChangeText={setPasswdField}
             containerStyle={{
               paddingHorizontal: 0,
               width: "auto",
@@ -105,8 +118,8 @@ export const AuthScreen = () => {
             radius={"sm"}
             type="solid"
             onPress={() => {
-              setEmailErr("Et non !");
-              setpasswdErr("Non plus !");
+              Keyboard.dismiss();
+              auth(emailField, passwdField);
             }}>
             Sign Up
           </Button>
