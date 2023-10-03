@@ -1,5 +1,5 @@
 export type BadgeType = {
-  id: number;
+  id: string | undefined;
   title: string;
-  color: string | undefined;
+  color: string | "null";
 };

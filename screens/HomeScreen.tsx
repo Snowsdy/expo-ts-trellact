@@ -1,15 +1,20 @@
-import React, { useState } from "react";
-import { Text, View } from "../components/Themed";
-import { Image, Platform, StyleSheet, useColorScheme } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import Colors from "../constants/Colors";
-import { Input } from "@rneui/base";
 import { FontAwesome } from "@expo/vector-icons";
+import { Input } from "@rneui/base";
 import { Button } from "@rneui/themed";
 import { router } from "expo-router";
+import React, { useState } from "react";
+import { Image, Platform, StyleSheet, useColorScheme } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Text, View } from "../components/Themed";
+import Colors from "../constants/Colors";
+import { useAuth } from "../hooks/useAuth";
+import { TaskType } from "../types/TaskType";
+import { updateTask } from "../api/tasks";
 
 export const HomeScreen = () => {
   const colorScheme = useColorScheme();
+  const userCredentials = useAuth();
+  const uid = userCredentials.user ? userCredentials.user.uid : "";
   const [emailErr, setEmailErr] = useState("");
   const [passwdErr, setpasswdErr] = useState("");
 
@@ -107,8 +112,33 @@ export const HomeScreen = () => {
             type="solid"
             onPress={() => {
               router.push("/home");
+              const task: TaskType = {
+                id: "jgZYVkzXKNRhWcTr584g",
+                badges: [
+                  {
+                    id: "Eb5QSlXSgaRWNzpe1Pe8",
+                    color: "#52D433",
+                    title: "1st badge",
+                  },
+                ],
+                color: "#25FAE5",
+                description: "Ceci est une description.",
+                images: [
+                  "https://picsum.photos/200/300",
+                  "https://picsum.photos/300/300",
+                  "https://picsum.photos/500/300",
+                ],
+                title: "1st Task TOTOTOTOTTO",
+              };
+              updateTask(task)
+                .then(() => {
+                  console.log("Transaction successfully committed!");
+                })
+                .catch((error) => {
+                  console.log("Transaction failed: ", error);
+                });
             }}>
-            Sign Up
+            Test Ajout DB
           </Button>
         </View>
       </View>

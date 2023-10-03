@@ -1,12 +1,17 @@
-import React, { useState } from "react";
-import { Text, View } from "../components/Themed";
-import { Image, Platform, StyleSheet, useColorScheme } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import Colors from "../constants/Colors";
-import { Input } from "@rneui/base";
 import { FontAwesome } from "@expo/vector-icons";
+import { Input } from "@rneui/base";
 import { Button } from "@rneui/themed";
-import { router } from "expo-router";
+import React, { useState } from "react";
+import {
+  Image,
+  Platform,
+  StyleSheet,
+  useColorScheme,
+  Keyboard,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Text, View } from "../components/Themed";
+import Colors from "../constants/Colors";
 import { auth } from "../api/auth";
 
 export const AuthScreen = () => {
@@ -113,6 +118,7 @@ export const AuthScreen = () => {
             radius={"sm"}
             type="solid"
             onPress={() => {
+              Keyboard.dismiss();
               auth(emailField, passwdField);
             }}>
             Sign Up

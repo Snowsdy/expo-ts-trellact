@@ -1,12 +1,18 @@
-import React, { useState } from "react";
-import { Text, View } from "../components/Themed";
-import { Image, Platform, StyleSheet, useColorScheme } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import Colors from "../constants/Colors";
-import { Input } from "@rneui/base";
 import { FontAwesome } from "@expo/vector-icons";
+import { Input } from "@rneui/base";
 import { Button } from "@rneui/themed";
-import { auth, signIn } from "../api/auth";
+import React, { useState } from "react";
+import {
+  Image,
+  Keyboard,
+  Platform,
+  StyleSheet,
+  useColorScheme,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { signIn } from "../api/auth";
+import { Text, View } from "../components/Themed";
+import Colors from "../constants/Colors";
 
 export const LoginScreen = () => {
   const colorScheme = useColorScheme();
@@ -112,6 +118,7 @@ export const LoginScreen = () => {
             radius={"sm"}
             type="solid"
             onPress={() => {
+              Keyboard.dismiss();
               signIn(emailField, passwdField);
             }}>
             Log In
