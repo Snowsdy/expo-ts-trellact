@@ -1,25 +1,22 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { Input } from "@rneui/base";
 import { Button } from "@rneui/themed";
+import { router } from "expo-router";
 import React, { useState } from "react";
-import {
-  Image,
-  Keyboard,
-  Platform,
-  StyleSheet,
-  useColorScheme,
-} from "react-native";
+import { Image, Platform, StyleSheet, useColorScheme } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { signIn } from "../api/auth";
 import { Text, View } from "../components/Themed";
 import Colors from "../constants/Colors";
+import { useAuth } from "../hooks/useAuth";
+import { TaskType } from "../types/TaskType";
+import { updateTask } from "../api/tasks";
 
-export const LoginScreen = () => {
+export const HomeScreen = () => {
   const colorScheme = useColorScheme();
+  const userCredentials = useAuth();
+  const uid = userCredentials.user ? userCredentials.user.uid : "";
   const [emailErr, setEmailErr] = useState("");
   const [passwdErr, setpasswdErr] = useState("");
-  const [emailField, setEmailField] = useState("");
-  const [passwdField, setPasswdField] = useState("");
 
   return (
     <SafeAreaView
@@ -45,7 +42,7 @@ export const LoginScreen = () => {
               marginBottom: 16,
             }}
           />
-          <Text style={styles.title}>Log In</Text>
+          <Text style={styles.title}>Sign Up</Text>
           <View
             style={[
               styles.separator,
@@ -55,8 +52,6 @@ export const LoginScreen = () => {
             ]}
           />
           <Input
-            value={emailField}
-            onChangeText={setEmailField}
             containerStyle={{
               paddingHorizontal: 0,
               width: "auto",
@@ -82,8 +77,6 @@ export const LoginScreen = () => {
             errorMessage={emailErr}
           />
           <Input
-            value={passwdField}
-            onChangeText={setPasswdField}
             containerStyle={{
               paddingHorizontal: 0,
               width: "auto",
@@ -118,10 +111,34 @@ export const LoginScreen = () => {
             radius={"sm"}
             type="solid"
             onPress={() => {
-              Keyboard.dismiss();
-              signIn(emailField, passwdField);
+              router.push("/home");
+              const task: TaskType = {
+                id: "jgZYVkzXKNRhWcTr584g",
+                badges: [
+                  {
+                    id: "Eb5QSlXSgaRWNzpe1Pe8",
+                    color: "#52D433",
+                    title: "1st badge",
+                  },
+                ],
+                color: "#25FAE5",
+                description: "Ceci est une description.",
+                images: [
+                  "https://picsum.photos/200/300",
+                  "https://picsum.photos/300/300",
+                  "https://picsum.photos/500/300",
+                ],
+                title: "1st Task TOTOTOTOTTO",
+              };
+              updateTask(task)
+                .then(() => {
+                  console.log("Transaction successfully committed!");
+                })
+                .catch((error) => {
+                  console.log("Transaction failed: ", error);
+                });
             }}>
-            Log In
+            Test Ajout DB
           </Button>
         </View>
       </View>

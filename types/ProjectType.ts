@@ -1,8 +1,9 @@
 import { TaskListType } from "./TaskListType";
 
 export type ProjectType = {
-  id: number;
+  id: string | undefined;
   title: string;
-  taskslists: [TaskListType];
-  color: string | undefined;
+  taskslists: TaskListType[];
+  color: string | "null";
+  userId: string;
 };

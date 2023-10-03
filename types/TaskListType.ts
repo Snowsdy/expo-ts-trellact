@@ -1,7 +1,7 @@
 import { TaskType } from "./TaskType";
 
 export type TaskListType = {
-  id: number;
+  id: string | undefined;
   title: string;
-  tasks: [TaskType];
+  tasks: TaskType[];
 };

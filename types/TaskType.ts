@@ -1,7 +1,10 @@
+import { BadgeType } from "./BadgeType";
+
 export type TaskType = {
-  id: number;
+  id: string | undefined;
   title: string;
-  images: [string];
+  images: string[];
   description: string;
-  color: string | undefined;
+  color: string | "null";
+  badges: BadgeType[];
 };
