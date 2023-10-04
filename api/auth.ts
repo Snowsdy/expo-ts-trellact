@@ -8,6 +8,8 @@ import {
   sendPasswordResetEmail,
   confirmPasswordReset,
   verifyPasswordResetCode,
+  updatePassword,
+  User,
 } from "firebase/auth";
 import app from "../config/firebase";
 import { ErrorType } from "../types/ErrorType";
@@ -71,4 +73,8 @@ export function confirmResetPasswordCode(code: string) {
 
 export function confirmResetPassword(code: string, newPassword: string) {
   return confirmPasswordReset(auth, code, newPassword);
+}
+
+export function updateUserPassword(user: User, newPassword: string) {
+  return updatePassword(user, newPassword);
 }
