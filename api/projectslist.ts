@@ -9,7 +9,6 @@ import {
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { ProjectType } from "../types/ProjectType";
-import { TaskListType } from "../types/TaskListType";
 
 export async function addProject(projectList: ProjectType, uid: string) {
   try {
@@ -31,7 +30,7 @@ export async function getProjectById(id: string) {
   const projectList: ProjectType = {
     id: querySnapshot.id,
     color: querySnapshot.get("color") as string,
-    taskslists: querySnapshot.get("taskslists") as TaskListType[],
+    taskslists: querySnapshot.get("taskslists") as string[],
     title: querySnapshot.get("title") as string,
     userId: querySnapshot.get("userId") as string,
   };
@@ -47,7 +46,7 @@ export async function getProjects() {
       id: doc.id,
       color: doc.get("color") as string,
       title: doc.get("title") as string,
-      taskslists: doc.get("taskslists") as TaskListType[],
+      taskslists: doc.get("taskslists") as string[],
       userId: doc.get("userId") as string,
     };
     projects.push(project);

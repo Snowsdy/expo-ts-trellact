@@ -1,14 +1,14 @@
+import { FontAwesome } from "@expo/vector-icons";
 import { Button, ButtonGroup, Icon, Input, ListItem } from "@rneui/themed";
-import React, { useState, useEffect } from "react";
+import { User } from "firebase/auth";
+import React, { useEffect, useState } from "react";
 import { Keyboard, useColorScheme } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import Colors from "../constants/Colors";
-import { FontAwesome } from "@expo/vector-icons";
+import { updateUserPassword } from "../api/auth";
 import CustomOverlay from "../components/Overlay";
 import { Text, View } from "../components/Themed";
+import Colors from "../constants/Colors";
 import { useAuth } from "../hooks/useAuth";
-import { Auth, User, getAuth } from "firebase/auth";
-import { updateUserPassword } from "../api/auth";
 
 export const SettingScreen = () => {
   const colorScheme = useColorScheme();

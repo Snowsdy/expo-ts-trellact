@@ -37,7 +37,7 @@ export async function getTasksLists() {
     let taskslist: TaskListType = {
       id: doc.id,
       title: doc.get("title") as string,
-      tasks: doc.get("tasks") as TaskType[],
+      tasks: doc.get("tasks") as string[],
     };
     taskslists.push(taskslist);
     console.log(`${doc.id} => ${doc.data()}`);
@@ -53,7 +53,7 @@ export async function getTaskListById(id: string) {
   const querySnapshot = await getDoc(taskslistRef);
   const tasksList: TaskListType = {
     id: querySnapshot.id,
-    tasks: querySnapshot.get("tasks") as TaskType[],
+    tasks: querySnapshot.get("tasks") as string[],
     title: querySnapshot.get("title") as string,
   };
 
