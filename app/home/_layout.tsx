@@ -22,6 +22,7 @@ export default function HomeLayout() {
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         headerTitle: "Project",
+        headerTitleAlign: "center",
         headerLeft: () => {
           return (
             <Button
@@ -36,7 +37,7 @@ export default function HomeLayout() {
                 borderRadius: 8,
               }}
               iconPosition="left">
-              Quit
+              Log Out
             </Button>
           );
         },

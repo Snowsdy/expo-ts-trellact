@@ -5,12 +5,16 @@ import {
   sendEmailVerification,
   signInWithEmailAndPassword,
   signOut,
+  sendPasswordResetEmail,
+  confirmPasswordReset,
+  verifyPasswordResetCode,
 } from "firebase/auth";
 import app from "../config/firebase";
 import { ErrorType } from "../types/ErrorType";
 
-export function auth(email: string, password: string) {
-  const auth = getAuth(app);
+export const auth = getAuth(app);
+
+export function createUser(email: string, password: string) {
   createUserWithEmailAndPassword(auth, email, password)
     .then((userCredentials) => {
       const user = userCredentials.user;
@@ -35,7 +39,6 @@ export function auth(email: string, password: string) {
 }
 
 export function signIn(email: string, password: string) {
-  const auth = getAuth(app);
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredentials) => {
       if (userCredentials.user.emailVerified) {
@@ -49,8 +52,23 @@ export function signIn(email: string, password: string) {
 }
 
 export function logOut() {
-  const auth = getAuth(app);
   signOut(auth).then(() => {
     router.push("/");
   });
+}
+
+export function sendResetPassword(email: string) {
+  return sendPasswordResetEmail(auth, email);
+}
+
+/**
+ * @param code
+ * @returns the email address if valid
+ */
+export function confirmResetPasswordCode(code: string) {
+  return verifyPasswordResetCode(auth, code);
+}
+
+export function confirmResetPassword(code: string, newPassword: string) {
+  return confirmPasswordReset(auth, code, newPassword);
 }

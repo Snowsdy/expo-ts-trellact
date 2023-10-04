@@ -1,5 +1,5 @@
-import { HomeScreen } from "../../screens/HomeScreen";
+import { SettingScreen } from "../../screens/SettingScreen";
 
 export default function SettingsScreen() {
-  return <HomeScreen />;
+  return <SettingScreen />;
 }
