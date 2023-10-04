@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useColorScheme } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getTaskListById } from "../api/taskslist";
@@ -14,13 +14,15 @@ export const HomeScreen = () => {
     title: "",
   });
 
-  getTaskListById("7WNQ6Ry0iT7v4JP3Gtqa").then((taskListData) => {
-    setTasksList({
-      id: taskListData.id,
-      tasks: taskListData.tasks,
-      title: taskListData.title,
+  useEffect(() => {
+    getTaskListById("RhqfdfY9QmmmSsYOc63W").then((taskListData) => {
+      setTasksList({
+        id: taskListData.id,
+        tasks: taskListData.tasks,
+        title: taskListData.title,
+      });
     });
-  });
+  }, []);
 
   return (
     tasksList.id && (
