@@ -26,11 +26,7 @@ export const HomeScreen = () => {
 
   return (
     tasksList.id && (
-      <SafeAreaView
-        style={{
-          flex: 1,
-          backgroundColor: Colors[colorScheme ?? "light"].background,
-        }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: Colors[colorScheme ?? "light"].background, }}>
         <TasksList {...tasksList} />
       </SafeAreaView>
     )
