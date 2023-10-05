@@ -22,20 +22,9 @@ export const AuthScreen = () => {
   const [passwdField, setPasswdField] = useState("");
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: Colors[colorScheme ?? "light"].background,
-      }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors[colorScheme ?? "light"].background, }}>
       <View style={styles.container}>
-        <View
-          style={{
-            borderWidth: 2,
-            borderColor: Colors[colorScheme ?? "light"].tint,
-            padding: 16,
-            borderRadius: 16,
-            width: "80%",
-          }}>
+        <View style={{ borderWidth: 2, borderColor: Colors[colorScheme ?? "light"].tint, padding: 16, borderRadius: 16, width: "80%", }}>
           <Image
             source={require("../assets/images/login.png")}
             style={{
@@ -67,13 +56,7 @@ export const AuthScreen = () => {
               color: Colors[colorScheme ?? "light"].text,
             }}
             leftIcon={
-              <FontAwesome
-                name="user"
-                style={{
-                  color: Colors[colorScheme ?? "light"].text,
-                }}
-                size={24}
-              />
+              <FontAwesome name="user" size={24} style={{ color: Colors[colorScheme ?? "light"].text, }} />
             }
             leftIconContainerStyle={{ marginRight: 8 }}
             label={"Email"}
@@ -99,18 +82,12 @@ export const AuthScreen = () => {
               "required: upper; required: lower; required: digit; max-consecutive: 2; minlength: 8;"
             }
             textContentType="password"
-            placeholder="abc.xyz@efg.fr"
+            placeholder="y0urP@ssw0rd"
             errorStyle={{ color: "red" }}
             secureTextEntry={true}
             errorMessage={passwdErr}
             leftIcon={
-              <FontAwesome
-                name="lock"
-                style={{
-                  color: Colors[colorScheme ?? "light"].text,
-                }}
-                size={24}
-              />
+              <FontAwesome name="lock" size={24} style={{ color: Colors[colorScheme ?? "light"].text, }} />
             }
             leftIconContainerStyle={{ marginRight: 8 }}
           />

@@ -18,20 +18,9 @@ export const ForgetPasswordScreen = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: Colors[colorScheme ?? "light"].background,
-      }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors[colorScheme ?? "light"].background, }}>
       <View style={styles.container}>
-        <View
-          style={{
-            borderWidth: 2,
-            borderColor: Colors[colorScheme ?? "light"].tint,
-            padding: 16,
-            borderRadius: 16,
-            width: "80%",
-          }}>
+        <View style={{ borderWidth: 2, borderColor: Colors[colorScheme ?? "light"].tint, padding: 16, borderRadius: 16, width: "80%", }}>
           <Text style={styles.title}>Forget Password</Text>
           <View
             style={[
@@ -54,13 +43,7 @@ export const ForgetPasswordScreen = () => {
               color: Colors[colorScheme ?? "light"].text,
             }}
             leftIcon={
-              <FontAwesome
-                name="user"
-                style={{
-                  color: Colors[colorScheme ?? "light"].text,
-                }}
-                size={24}
-              />
+              <FontAwesome name="user" size={24} style={{ color: Colors[colorScheme ?? "light"].text, }} />
             }
             leftIconContainerStyle={{ marginRight: 8 }}
             label={"Email"}
