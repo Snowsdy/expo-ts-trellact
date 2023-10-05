@@ -53,13 +53,13 @@ export async function getBadgeById(id: string) {
 export async function updateBadge(badge: BadgeType) {
   const badgeRef = doc(db, "badges", badge.id ? badge.id : "");
   return await runTransaction(db, async (transaction) => {
-    return await transaction.get(badgeRef).then((data) => {
-      if (!data.exists) {
-        throw "Document does not exists !";
-      }
+    let data = await transaction.get(badgeRef)
+    
+    if (!data.exists) {
+      throw "Document does not exists !";
+    }
 
-      transaction.update(badgeRef, badge);
-    });
+    transaction.update(badgeRef, badge);
   });
 }
 

@@ -15,10 +15,10 @@ export const SettingScreen = () => {
   const [expanded, setExpanded] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = React.useState<number>();
-  const [toogleUpdatePassword, setToogleUpdatePassword] = useState(false);
+  const [toggleUpdatePassword, setToggleUpdatePassword] = useState(false);
   const [passwdField, setPasswdField] = useState("");
   const [passwdErr, setpasswdErr] = useState("");
-  const [tooglePassword, setTooglePassword] = useState(false);
+  const [togglePassword, setTogglePassword] = useState(false);
   const [user, setUser] = useState<User>();
   const userCredentials = useAuth();
 
@@ -28,14 +28,19 @@ export const SettingScreen = () => {
     }
   }, [userCredentials]);
 
+  const enum OverlayAction {
+    DELETE_ACCOUNT,
+    CANCEL,
+  }
+
   const getOverlayAction = (value: number) => {
     switch (value) {
-      case 0:
+      case OverlayAction.DELETE_ACCOUNT:
         // ? Supression des données & du compte
         setIsVisible(false);
         break;
 
-      case 1:
+      case OverlayAction.CANCEL:
         // * Annuler l'opération
         setIsVisible(false);
         break;
@@ -47,32 +52,20 @@ export const SettingScreen = () => {
   };
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: Colors[colorScheme ?? "light"].background,
-      }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: Colors[colorScheme ?? "light"].background, }}>
       <ListItem.Accordion
         containerStyle={{
           backgroundColor: Colors[colorScheme ?? "light"].background,
           columnGap: 8,
         }}
         icon={
-          <FontAwesome
-            name="chevron-down"
-            color={Colors[colorScheme ?? "light"].text}
-            size={14}
-          />
+          <FontAwesome name="chevron-down" size={14} color={Colors[colorScheme ?? "light"].text} />
         }
         android_disableSound
         leftRotate={false}
         content={
           <>
-            <FontAwesome
-              name="user"
-              color={Colors[colorScheme ?? "light"].text}
-              size={18}
-            />
+            <FontAwesome name="user" size={18} color={Colors[colorScheme ?? "light"].text} />
             <ListItem.Content>
               <ListItem.Title
                 style={{ color: Colors[colorScheme ?? "light"].text }}>
@@ -82,12 +75,11 @@ export const SettingScreen = () => {
           </>
         }
         isExpanded={expanded}
-        onPress={() => {
-          setExpanded(!expanded);
-        }}>
+        onPress={() => setExpanded(!expanded)}
+        >
         {user && (
           <ListItem
-            onPress={() => setToogleUpdatePassword(!toogleUpdatePassword)}
+            onPress={() => setToggleUpdatePassword(!toggleUpdatePassword)}
             containerStyle={{
               backgroundColor: Colors[colorScheme ?? "light"].background,
             }}>
@@ -106,11 +98,7 @@ export const SettingScreen = () => {
           </ListItem>
         )}
 
-        <ListItem
-          onPress={() => setIsVisible(!isVisible)}
-          containerStyle={{
-            backgroundColor: Colors[colorScheme ?? "light"].background,
-          }}>
+        <ListItem onPress={() => setIsVisible(!isVisible)} containerStyle={{ backgroundColor: Colors[colorScheme ?? "light"].background, }}>
           <Icon
             name="trash-can-outline"
             type="material-community"
@@ -127,7 +115,8 @@ export const SettingScreen = () => {
       <CustomOverlay
         overlayStyle={{ width: "60%" }}
         isVisible={isVisible}
-        onBackdropPress={() => setIsVisible(!isVisible)}>
+        onBackdropPress={() => setIsVisible(!isVisible)}
+        >
         <View style={{ backgroundColor: Colors[colorScheme ?? "light"].text }}>
           <Text
             style={{
@@ -152,9 +141,9 @@ export const SettingScreen = () => {
       {user && (
         <CustomOverlay
           overlayStyle={{ width: "60%" }}
-          isVisible={toogleUpdatePassword}
+          isVisible={toggleUpdatePassword}
           onBackdropPress={() => {
-            setToogleUpdatePassword(!toogleUpdatePassword);
+            setToggleUpdatePassword(!toggleUpdatePassword);
             setPasswdField("");
           }}>
           <View
@@ -178,7 +167,7 @@ export const SettingScreen = () => {
               }
               placeholder="***************"
               errorStyle={{ color: "red" }}
-              secureTextEntry={!tooglePassword}
+              secureTextEntry={!togglePassword}
               errorMessage={passwdErr}
               leftIcon={
                 <FontAwesome
@@ -190,10 +179,10 @@ export const SettingScreen = () => {
                 />
               }
               rightIcon={
-                tooglePassword === false ? (
+                togglePassword === false ? (
                   <FontAwesome
                     name="eye"
-                    onPress={() => setTooglePassword(!tooglePassword)}
+                    onPress={() => setTogglePassword(!togglePassword)}
                     style={{
                       color: Colors[colorScheme ?? "light"].background,
                     }}
@@ -202,7 +191,7 @@ export const SettingScreen = () => {
                 ) : (
                   <FontAwesome
                     name="eye-slash"
-                    onPress={() => setTooglePassword(!tooglePassword)}
+                    onPress={() => setTogglePassword(!togglePassword)}
                     style={{
                       color: Colors[colorScheme ?? "light"].background,
                     }}
@@ -219,7 +208,7 @@ export const SettingScreen = () => {
                 Keyboard.dismiss();
                 updateUserPassword(user, passwdField).then(() => {
                   alert("Password updated.");
-                  setToogleUpdatePassword(!toogleUpdatePassword);
+                  setToggleUpdatePassword(!toggleUpdatePassword);
                 });
               }}>
               Set New Password

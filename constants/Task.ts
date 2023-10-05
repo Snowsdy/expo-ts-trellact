@@ -6,22 +6,23 @@ export const TaskStyle = StyleSheet.create({
     borderWidth: 0,
   },
   titleTask: {
-    fontSize: 24,
+    fontSize: 18,
     fontWeight: "bold",
-    textDecoration: "underline",
+    textDecorationLine: "underline",
     color: "#fff",
-    textAlign: "left",
+    marginBottom: 0,
   },
   descriptionTitleTask: {
-    fontSize: 18,
+    fontSize: 16,
     textDecorationLine: "underline",
-    fontWeight: "bold",
+    fontWeight: "500",
     marginBottom: 10,
     color: "#fff",
   },
   descriptionTask: {
-    fontSize: 16,
+    fontSize: 12,
     color: "#fff",
-    marginBottom: 10,
+    marginBottom: 10,  
   },
+
 });
