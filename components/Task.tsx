@@ -13,13 +13,18 @@ const Task: React.FC<TaskType> = ({
   images,
   description,
   color,
-  badges,
 }) => {
   const taskId = id ? id : "";
   const colorTask = color ? color : "#999";
   return (
-    <Card containerStyle={[{ backgroundColor: colorTask}, TaskStyle.container]}>
-      <View style={{flexDirection: "row", justifyContent: "space-between", marginBottom: 5,}}>
+    <Card
+      containerStyle={[{ backgroundColor: colorTask }, TaskStyle.container]}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          marginBottom: 5,
+        }}>
         <Card.Title style={TaskStyle.titleTask}>{title}</Card.Title>
         <Button
           onPress={() => deleteTask(taskId)}
@@ -27,7 +32,7 @@ const Task: React.FC<TaskType> = ({
             name: "trash",
             type: "font-awesome",
             size: 15,
-            color: "#fff"
+            color: "#fff",
           }}
           accessibilityLabel="Learn more about this purple button"
           color="red"
@@ -42,7 +47,6 @@ const Task: React.FC<TaskType> = ({
         <Text style={TaskStyle.descriptionTitleTask}>
           Image de description :
         </Text>
-
       </View>
     </Card>
   );

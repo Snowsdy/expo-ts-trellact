@@ -3,65 +3,59 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDoc,
   getDocs,
+  query,
   runTransaction,
+  where,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { TaskType } from "../types/TaskType";
-import { BadgeType } from "../types/BadgeType";
 
-export async function addTask(task: TaskType) {
+const TASKS_PATH = "tasks";
+
+export async function addTask(task: TaskType): Promise<TaskType | null> {
   try {
-    const docRef = await addDoc(collection(db, "tasks"), {
+    const docRef = await addDoc(collection(db, TASKS_PATH), {
       title: task.title,
       images: task.images,
       description: task.description,
       color: task.color,
-      badges: task.badges,
+      tasklistId: task.tasklistId,
     });
+    let addedTask: TaskType = task;
+    addedTask.id = docRef.id;
+
+    return addedTask;
   } catch (e) {
     console.error("Error adding document: ", e);
   }
+
+  return null;
 }
 
-export async function getTasks() {
-  const querySnapshot = await getDocs(collection(db, "tasks"));
+export async function getTasksByTasklistId(
+  tasklistId: string
+): Promise<TaskType[]> {
+  const collectionRef = collection(db, TASKS_PATH);
+  const q = query(collectionRef, where("tasklistId", "==", tasklistId));
+  const querySnapshot = await getDocs(q);
   let tasks: TaskType[] = [];
-  querySnapshot.forEach((doc) => {
-    let task: TaskType = {
-      id: doc.id,
-      title: doc.get("title") as string,
-      images: doc.get("images") as string[],
-      description: doc.get("description") as string,
-      color: doc.get("color") as string,
-      badges: doc.get("badges") as BadgeType[],
-    };
-    tasks.push(task);
+  querySnapshot.forEach((docRef) => {
+    tasks.push({
+      id: docRef.id,
+      color: docRef.get("color") as string | undefined,
+      description: docRef.get("description") as string,
+      images: docRef.get("images") as string[],
+      tasklistId: docRef.get("tasklistId") as string,
+      title: docRef.get("title") as string,
+    });
   });
 
-  return {
-    tasks,
-  };
+  return tasks;
 }
 
-export async function getTaskById(id: string) {
-  const taskRef = doc(db, "tasks", id);
-  const querySnapshot = await getDoc(taskRef);
-  const task: TaskType = {
-    id: querySnapshot.id,
-    badges: querySnapshot.get("badges") as BadgeType[],
-    color: querySnapshot.get("color") as string,
-    description: querySnapshot.get("description") as string,
-    images: querySnapshot.get("images") as string[],
-    title: querySnapshot.get("title") as string,
-  };
-
-  return task;
-}
-
-export async function updateTask(task: TaskType) {
-  const taskRef = doc(db, "tasks", task.id ? task.id : "");
+export async function updateTask(task: TaskType): Promise<void> {
+  const taskRef = doc(db, TASKS_PATH, task.id ? task.id : "");
   return await runTransaction(db, async (transaction) => {
     return await transaction.get(taskRef).then((data) => {
       if (!data.exists) {
@@ -73,30 +67,6 @@ export async function updateTask(task: TaskType) {
   });
 }
 
-/// Example of How to get a collection of another collection (Task from Badge)
-/* export async function getTaskByBadge(badge: BadgeType) {
-  const id = badge.id as string;
-  const taskRef = collection(db, "tasks");
-  const q = query(taskRef, where("badges", "array-contains", id));
-  const querySnapshot = await getDocs(q);
-  let tasks: TaskType[] = [];
-  querySnapshot.forEach((doc) => {
-    let task: TaskType = {
-      id: doc.id,
-      title: doc.get("title") as string,
-      images: doc.get("images") as string[],
-      description: doc.get("description") as string,
-      color: doc.get("color") as string,
-      badges: doc.get("badges") as BadgeType[],
-    };
-    tasks.push(task);
-  });
-
-  return {
-    tasks,
-  };
-} */
-
-export async function deleteTask(id: string) {
-  return deleteDoc(doc(db, "tasks", id));
+export async function deleteTask(id: string): Promise<void> {
+  return deleteDoc(doc(db, TASKS_PATH, id));
 }

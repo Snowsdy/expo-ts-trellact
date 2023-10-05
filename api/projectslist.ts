@@ -3,62 +3,58 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDoc,
   getDocs,
+  query,
   runTransaction,
+  where,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { ProjectType } from "../types/ProjectType";
-import { TaskListType } from "../types/TaskListType";
 
-export async function addProject(projectList: ProjectType, uid: string) {
+const PROJECT_PATH = "project";
+
+export async function addProject(
+  projectList: ProjectType,
+  uid: string
+): Promise<ProjectType | null> {
   try {
-    const docRef = await addDoc(collection(db, "projectslist"), {
+    const docRef = await addDoc(collection(db, PROJECT_PATH), {
       color: projectList.color,
       title: projectList.title,
-      taskslists: projectList.taskslists,
       userId: uid,
     });
+    let project: ProjectType = projectList;
+    project.id = docRef.id;
+
+    return project;
   } catch (e) {
     console.error("Error adding document: ", e);
   }
+
+  return null;
 }
 
-export async function getProjectById(id: string) {
-  const projectRef = doc(db, "projectslist", id);
-  const querySnapshot = await getDoc(projectRef);
-  const projectList: ProjectType = {
-    id: querySnapshot.id,
-    color: querySnapshot.get("color") as string,
-    taskslists: querySnapshot.get("taskslists") as TaskListType[],
-    title: querySnapshot.get("title") as string,
-    userId: querySnapshot.get("userId") as string,
-  };
-
-  return projectList;
-}
-
-export async function getProjects() {
-  const querySnapshot = await getDocs(collection(db, "projectslist"));
+export async function getProjectsByUserId(
+  userId: string
+): Promise<ProjectType[]> {
+  const projectRef = collection(db, PROJECT_PATH);
+  const q = query(projectRef, where("userId", "==", userId));
+  const querySnapshot = await getDocs(q);
   let projects: ProjectType[] = [];
-  querySnapshot.forEach((doc) => {
-    let project: ProjectType = {
-      id: doc.id,
-      color: doc.get("color") as string,
-      title: doc.get("title") as string,
-      taskslists: doc.get("taskslists") as TaskListType[],
-      userId: doc.get("userId") as string,
-    };
-    projects.push(project);
+  querySnapshot.forEach((projectDoc) => {
+    projects.push({
+      id: projectDoc.id,
+      color: projectDoc.get("color") as string | undefined,
+      title: projectDoc.get("title") as string,
+      userId: projectDoc.get("userId") as string,
+    });
   });
 
-  return {
-    projects,
-  };
+  return projects;
 }
 
-export async function updateProject(project: ProjectType) {
-  const projectRef = doc(db, "projectlist", project.id ? project.id : "");
+export async function updateProject(project: ProjectType): Promise<void> {
+  const projectRef = doc(db, PROJECT_PATH, project.id ? project.id : "");
   return await runTransaction(db, async (transaction) => {
     return await transaction.get(projectRef).then((data) => {
       if (!data.exists) {
@@ -70,6 +66,6 @@ export async function updateProject(project: ProjectType) {
   });
 }
 
-export async function deleteProject(id: string) {
-  await deleteDoc(doc(db, "projectslist", id));
+export async function deleteProject(id: string): Promise<void> {
+  await deleteDoc(doc(db, PROJECT_PATH, id));
 }
