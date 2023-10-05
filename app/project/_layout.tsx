@@ -1,13 +1,62 @@
-import { Stack } from "expo-router";
+import { FontAwesome } from "@expo/vector-icons";
+import { Tabs, router, useGlobalSearchParams } from "expo-router";
+import { useColorScheme } from "react-native";
+import Colors from "../../constants/Colors";
+import { Button } from "@rneui/themed";
+
+function TabBarIcon(props: {
+  name: React.ComponentProps<typeof FontAwesome>["name"];
+  color: string;
+}) {
+  return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
+}
 
 export default function ProjectLayout() {
+  const colorScheme = useColorScheme();
+  const local = useGlobalSearchParams<{
+    projectId: string;
+    projectName: string;
+  }>();
+
   return (
-    <Stack initialRouteName="index">
-      <Stack.Screen
+    <Tabs
+      safeAreaInsets={{ top: 8, right: 8, bottom: 8, left: 8 }}
+      screenOptions={{
+        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        headerTitle: local.projectName,
+        headerLeft: () => {
+          return (
+            <Button
+              buttonStyle={{ backgroundColor: "transparent" }}
+              onPress={() => {
+                router.back();
+              }}
+              icon={
+                <TabBarIcon
+                  color={Colors[colorScheme ?? "light"].text}
+                  name="angle-left"
+                />
+              }
+              titleStyle={{
+                marginLeft: 8,
+                color: Colors[colorScheme ?? "light"].text,
+                borderRadius: 8,
+              }}
+              iconPosition="left">
+              Go Back
+            </Button>
+          );
+        },
+        headerLeftContainerStyle: { paddingLeft: 8 },
+      }}>
+      <Tabs.Screen
         name="[projectId]"
         initialParams={["projectId"]}
-        options={{ title: "Project" }}
+        options={{
+          title: "Project",
+          tabBarIcon: ({ color }) => <TabBarIcon name="table" color={color} />,
+        }}
       />
-    </Stack>
+    </Tabs>
   );
 }

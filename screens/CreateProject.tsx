@@ -30,7 +30,11 @@ export function CreateProject() {
   }
 
   function createProject() {
-    router.push("/project/bovCjDkFuFhDKU0gtqvZ");
+    router.push("/project");
+    router.setParams({
+      projectId: "bovCjDkFuFhDKU0gtqvZ",
+      projectName: "Premier Projet",
+    });
   }
 
   return (

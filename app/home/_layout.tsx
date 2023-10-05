@@ -41,7 +41,7 @@ export default function HomeLayout() {
             </Button>
           );
         },
-        headerLeftContainerStyle: { paddingLeft: 16 },
+        headerLeftContainerStyle: { paddingLeft: 8 },
       }}>
       <Tabs.Screen
         name="readProject"

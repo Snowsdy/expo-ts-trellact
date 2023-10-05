@@ -1,12 +1,14 @@
 import React from "react";
 import { Text, View } from "../../components/Themed";
-import { useLocalSearchParams } from "expo-router";
+import { useGlobalSearchParams } from "expo-router";
 
 const ProjectScreen = () => {
-  const local = useLocalSearchParams();
+  const local = useGlobalSearchParams<{
+    projectId: string;
+  }>();
   return (
     <View>
-      <Text>Voici l'id du projet : {local.projectId as string}</Text>
+      <Text>Voici l'id du projet : {local.projectId}</Text>
     </View>
   );
 };
