@@ -12,30 +12,11 @@ const TasksList: React.FC<TaskListType> = ({ id, tasks, title }) => {
     <View style={[TasksListStyle.container,{shadowColor: Colors[colorScheme ?? "light"].shadowColor} ]}>
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
         <Text style={TasksListStyle.title}>{title}</Text>
-        <Button
-
-              icon={{
-                name: 'plus',
-                type: 'font-awesome',
-                size: 15,
-                color: 'white',
-              }}
-              iconContainerStyle={{
-                padding: 0,
-              }}
-              buttonStyle={{
-                backgroundColor: 'rgba(90, 154, 230, 1)',
-                borderColor: 'transparent',
-                borderWidth: 0,
-                borderRadius: 8,
-                height: 35,
-                padding: 0,
-              }}
-              containerStyle={{
-                padding: 0,
-              }}
-
-            />
+        <View style={{flexDirection: "row", justifyContent: "space-between", gap: 5,}}>
+            <Button  icon={{ name: "plus-circle", type: "font-awesome", size: 15, color: "#fff", }} accessibilityLabel="Add task" color="green"/>
+            <Button  icon={{ name: "pencil", type: "font-awesome", size: 15, color: "#fff", }} accessibilityLabel="Edit task"/>
+            <Button  icon={{ name: "trash", type: "font-awesome", size: 15, color: "#fff", }} accessibilityLabel="Delete task" color="red" />
+        </View>
       </View>
       
       <FlatList
@@ -67,7 +48,7 @@ const TasksListStyle = StyleSheet.create({
     
   },
   stackView: {},
-  title: { fontSize: 28, textAlign: "center", color: "#000", fontWeight: "bold", textTransform: "uppercase",},
+  title: { fontSize: 28, textAlign: "center", color: "#000", fontWeight: "bold",},
 });
 
 export default TasksList;
