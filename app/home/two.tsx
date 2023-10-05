@@ -1,5 +1,5 @@
-import { HomeScreen } from "../../screens/HomeScreen";
+import { CreateProject } from "../../screens/CreateProject";
 
 export default function TabTwoScreen() {
-  return <HomeScreen />;
+  return <CreateProject />;
 }
