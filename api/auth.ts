@@ -26,10 +26,10 @@ export function createUser(email: string, password: string) {
           // Send email verification
           sendEmailVerification(user)
             .catch((err) => {
-              console.log(err);
+              console.error(err);
             })
             .then(() => {
-              console.log("Verification Email send.");
+              console.log("Verification Email send."); //popup
             });
         }
       }
@@ -49,7 +49,7 @@ export function signIn(email: string, password: string) {
     })
     .catch((err) => {
       const error = err as ErrorType;
-      console.log(`Error Code : ${error.code} \n ${error.message}`);
+      console.error(`Error Code : ${error.code} \n ${error.message}`);
     });
 }
 

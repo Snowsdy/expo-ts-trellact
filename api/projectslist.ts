@@ -19,7 +19,6 @@ export async function addProject(projectList: ProjectType, uid: string) {
       taskslists: projectList.taskslists,
       userId: uid,
     });
-    console.log("Document written with ID: ", docRef.id);
   } catch (e) {
     console.error("Error adding document: ", e);
   }
@@ -51,7 +50,6 @@ export async function getProjects() {
       userId: doc.get("userId") as string,
     };
     projects.push(project);
-    console.log(`${doc.id} => ${doc.data()}`);
   });
 
   return {

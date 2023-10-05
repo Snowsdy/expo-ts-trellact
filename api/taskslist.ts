@@ -21,7 +21,6 @@ export async function addTasksList(tasksList: TaskListType) {
       title: tasksList.title,
       tasks: tasksList.tasks,
     });
-    console.log("Document written with ID: ", docRef.id);
   } catch (e) {
     console.error("Error adding document: ", e);
   }
@@ -40,7 +39,6 @@ export async function getTasksLists() {
       tasks: doc.get("tasks") as TaskType[],
     };
     taskslists.push(taskslist);
-    console.log(`${doc.id} => ${doc.data()}`);
   });
 
   return {
