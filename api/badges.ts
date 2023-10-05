@@ -16,7 +16,6 @@ export async function addBadge(task: BadgeType) {
       title: task.title,
       color: task.color,
     });
-    console.log("Document written with ID: ", docRef.id);
   } catch (e) {
     console.error("Error adding document: ", e);
   }
@@ -32,7 +31,6 @@ export async function getBadges() {
       color: doc.get("color") as string,
     };
     badges.push(badge);
-    console.log(`${doc.id} => ${doc.data()}`);
   });
 
   return {
@@ -55,13 +53,13 @@ export async function getBadgeById(id: string) {
 export async function updateBadge(badge: BadgeType) {
   const badgeRef = doc(db, "badges", badge.id ? badge.id : "");
   return await runTransaction(db, async (transaction) => {
-    return await transaction.get(badgeRef).then((data) => {
-      if (!data.exists) {
-        throw "Document does not exists !";
-      }
+    let data = await transaction.get(badgeRef)
+    
+    if (!data.exists) {
+      throw "Document does not exists !";
+    }
 
-      transaction.update(badgeRef, badge);
-    });
+    transaction.update(badgeRef, badge);
   });
 }
 

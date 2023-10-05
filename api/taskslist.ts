@@ -12,8 +12,9 @@ import { TaskListType } from "../types/TaskListType";
 import { TaskType } from "../types/TaskType";
 
 /**
- * Return a promise to let the opportunity to show a notification which alert the user of the added item.
  * @param tasksList
+ * @returns a promise to let the opportunity to show a notification which alert the user of the added item.
+ * @nothrow
  */
 export async function addTasksList(tasksList: TaskListType) {
   try {
@@ -21,14 +22,14 @@ export async function addTasksList(tasksList: TaskListType) {
       title: tasksList.title,
       tasks: tasksList.tasks,
     });
-    console.log("Document written with ID: ", docRef.id);
   } catch (e) {
     console.error("Error adding document: ", e);
   }
 }
 
 /**
- * Return a promise which contains all TaskLists from Firebase
+ * @brief fetch all TaskLists from Firebase
+ * @returns {Promise<TaskListType[]>}
  */
 export async function getTasksLists() {
   const querySnapshot = await getDocs(collection(db, "taskslist"));
@@ -40,7 +41,6 @@ export async function getTasksLists() {
       tasks: doc.get("tasks") as TaskType[],
     };
     taskslists.push(taskslist);
-    console.log(`${doc.id} => ${doc.data()}`);
   });
 
   return {
@@ -48,6 +48,11 @@ export async function getTasksLists() {
   };
 }
 
+/**
+ * @brief fetch a TaskList from Firebase using its id
+ * @param {string} id the id of the TaskList to fetch
+ * @returns {Promise<TaskListType>}
+ */
 export async function getTaskListById(id: string) {
   const taskslistRef = doc(db, "taskslist", id);
   const querySnapshot = await getDoc(taskslistRef);
@@ -60,19 +65,30 @@ export async function getTaskListById(id: string) {
   return tasksList;
 }
 
+/**
+ * @brief update a TaskList from Firebase
+ * @param {TaskType} taskslist the TaskList to update
+ * @returns {Promise<void>}
+ * @throws {string} if the document does not exists
+ */
 export async function updateTaskList(taskslist: TaskType) {
   const tasksListRef = doc(db, "taskslist", taskslist.id ? taskslist.id : "");
   return await runTransaction(db, async (transaction) => {
-    return await transaction.get(tasksListRef).then((data) => {
-      if (!data.exists) {
-        throw "Document does not exists !";
-      }
+    let data = await transaction.get(tasksListRef);
 
-      transaction.update(tasksListRef, taskslist);
-    });
+    if (!data.exists) {
+      throw "Document does not exists !";
+    }
+
+    transaction.update(tasksListRef, taskslist);
   });
 }
 
+/**
+ * @brief delete a TaskList from Firebase
+ * @param {string} id the id of the TaskList to delete
+ * @returns {Promise<void>}
+ */
 export async function deleteTasksList(id: string) {
   await deleteDoc(doc(db, "taskslist", id));
 }
