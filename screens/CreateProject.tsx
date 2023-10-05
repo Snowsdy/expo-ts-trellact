@@ -72,7 +72,11 @@ export function CreateProject() {
 
                 addProject(project).then((addedProject) => {
                   if (addedProject != null) {
-                    router.push("/home/readProject");
+                    router.push("/project/");
+                    router.setParams({
+                      projectId: addedProject.id ? addedProject.id : "",
+                      projectName: addedProject.title,
+                    });
                   }
                 });
               }

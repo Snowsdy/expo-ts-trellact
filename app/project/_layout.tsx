@@ -24,12 +24,13 @@ export default function ProjectLayout() {
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         headerTitle: local.projectName,
+        headerTitleAlign: "center",
         headerLeft: () => {
           return (
             <Button
               buttonStyle={{ backgroundColor: "transparent" }}
               onPress={() => {
-                router.back();
+                router.push("/home/");
               }}
               icon={
                 <TabBarIcon
@@ -43,7 +44,7 @@ export default function ProjectLayout() {
                 borderRadius: 8,
               }}
               iconPosition="left">
-              Go Back
+              Go Home
             </Button>
           );
         },
@@ -51,10 +52,16 @@ export default function ProjectLayout() {
       }}>
       <Tabs.Screen
         name="[projectId]"
-        initialParams={["projectId"]}
         options={{
           title: "Project",
           tabBarIcon: ({ color }) => <TabBarIcon name="table" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="addTasklist"
+        options={{
+          title: "Add Taskslist",
+          tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
         }}
       />
     </Tabs>
