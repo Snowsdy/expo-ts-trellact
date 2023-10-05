@@ -1,59 +1,87 @@
-/**
- * @brief this is the page for creating a new project, it is a form page
- * @note this page was created by Copilot to save time, had to fix three issues, all else is AI generated
- */
-
-import React, { useState } from "react";
-import { Text, View, TextInput, Button, StyleSheet } from "react-native";
-import { useColorScheme } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, useColorScheme } from "react-native";
+import { Text, View } from "../components/Themed";
+import { useAuth } from "../hooks/useAuth";
 import Colors from "../constants/Colors";
-import { addTasksList } from "../api/taskslist";
-import { TaskListType } from "../types/TaskListType";
-import { TaskType } from "../types/TaskType";
-import Task from "../components/Task";
-import { useNavigation } from "@react-navigation/native";
+import { Input, Button } from "@rneui/themed";
+import { ProjectType } from "../types/ProjectType";
+import { addProject } from "../api/projectslist";
 import { router } from "expo-router";
 
 export function CreateProject() {
+  const userCredentials = useAuth();
   const colorScheme = useColorScheme();
-  const [taskList, setTaskList] = useState<TaskListType>({
-    id: "",
-    title: "",
-    color: undefined,
-    projectId: "",
-  });
-  const [taskTitle, setTaskTitle] = useState<string>("");
+  const [userId, setUserId] = useState<string>("");
+  const [projectName, setProjectName] = useState<string>("");
+  const [color, setColor] = useState<string>("");
+  const [nameErr, setNameErr] = useState<string>("");
+  const [colorErr, setColorErr] = useState<string>("");
 
-  function addTask() {
-    //TODO
-  }
-
-  function createProject() {
-    router.push("/project");
-    router.setParams({
-      projectId: "bovCjDkFuFhDKU0gtqvZ",
-      projectName: "Premier Projet",
-    });
-  }
+  useEffect(() => {
+    if (userCredentials.user) {
+      setUserId(userCredentials.user.uid);
+    }
+  }, [userCredentials]);
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        backgroundColor: Colors[colorScheme ?? "light"].background,
-      }}>
+    userId != "" && (
       <View style={styles.container}>
-        <Text style={styles.title}>Create a new project</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={setTaskTitle}
-          value={taskTitle}
-          placeholder="Enter a task title"
-        />
-        <Button title="Create project" onPress={createProject} />
+        <Text style={styles.title}>Create a New Project</Text>
+        <View
+          style={[
+            styles.card,
+            { borderColor: Colors[colorScheme ?? "light"].text },
+          ]}>
+          <Text>Name :</Text>
+          <Input
+            value={projectName}
+            onChangeText={setProjectName}
+            inputStyle={{
+              color: Colors[colorScheme ?? "light"].text,
+            }}
+            errorMessage={nameErr}
+          />
+          <Text>Color :</Text>
+          <Input
+            value={color}
+            onChangeText={setColor}
+            containerStyle={{ marginBottom: 8 }}
+            inputStyle={{
+              color: Colors[colorScheme ?? "light"].text,
+            }}
+            errorMessage={colorErr}
+          />
+          <Button
+            radius={"sm"}
+            type="solid"
+            onPress={() => {
+              if (projectName.length === 0) {
+                setNameErr("Veuillez remplir ce champ.");
+              }
+              if (color.length === 0) {
+                setColorErr("Veuillez remplir ce champ.");
+              }
+              // Do something
+              if (color.length > 0 && projectName.length > 0) {
+                const project: ProjectType = {
+                  id: undefined,
+                  userId: userId,
+                  color: color,
+                  title: projectName,
+                };
+
+                addProject(project).then((addedProject) => {
+                  if (addedProject != null) {
+                    router.push("/home/readProject");
+                  }
+                });
+              }
+            }}>
+            Create New Project
+          </Button>
+        </View>
       </View>
-    </SafeAreaView>
+    )
   );
 }
 
@@ -65,11 +93,11 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
+    textAlign: "center",
   },
-  input: {
-    borderWidth: 1,
-    borderColor: "gray",
-    padding: 10,
-    marginBottom: 20,
+  card: {
+    borderRadius: 16,
+    padding: 8,
+    borderWidth: 3,
   },
 });

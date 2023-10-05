@@ -30,3 +30,9 @@ npx expo run:${plateform}
 ---
 
 **🚨 Don't forget to `npm install` before doing something 🚨**
+
+Made by :
+
+- Cusma Vincenzo
+- Cristinelli Benjamin
+- Doriath Arthus

@@ -14,14 +14,13 @@ import { ProjectType } from "../types/ProjectType";
 const PROJECT_PATH = "project";
 
 export async function addProject(
-  projectList: ProjectType,
-  uid: string
+  projectList: ProjectType
 ): Promise<ProjectType | null> {
   try {
     const docRef = await addDoc(collection(db, PROJECT_PATH), {
       color: projectList.color,
       title: projectList.title,
-      userId: uid,
+      userId: projectList.userId,
     });
     let project: ProjectType = projectList;
     project.id = docRef.id;

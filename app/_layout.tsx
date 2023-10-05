@@ -64,19 +64,6 @@ function RootLayoutNav() {
           name="confirmPassword"
           options={{ headerTitle: "Confirm Password" }}
         />
-        <Stack.Screen
-          name="editProject"
-          options={{ headerTitle: "Edit Project" }}
-        />
-        <Stack.Screen
-          name="editTasklist"
-          options={{ headerTitle: "Edit Tasklist" }}
-        />
-        <Stack.Screen name="editTask" options={{ headerTitle: "Edit Task" }} />
-        <Stack.Screen
-          name="editBadge"
-          options={{ headerTitle: "Edit Badge" }}
-        />
       </Stack>
     </ThemeProvider>
   );
