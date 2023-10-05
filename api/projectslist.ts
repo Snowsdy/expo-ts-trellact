@@ -16,7 +16,7 @@ export async function addProject(projectList: ProjectType, uid: string) {
     const docRef = await addDoc(collection(db, "projectslist"), {
       color: projectList.color,
       title: projectList.title,
-      tasksListIds: projectList.taskslists,
+      taskslists: projectList.taskslists,
       userId: uid,
     });
   } catch (e) {
@@ -26,7 +26,16 @@ export async function addProject(projectList: ProjectType, uid: string) {
 
 export async function getProjectById(id: string) {
   const projectRef = doc(db, "projectslist", id);
-  return await getDoc(projectRef);
+  const querySnapshot = await getDoc(projectRef);
+  const projectList: ProjectType = {
+    id: querySnapshot.id,
+    color: querySnapshot.get("color") as string,
+    taskslists: querySnapshot.get("taskslists") as TaskListType[],
+    title: querySnapshot.get("title") as string,
+    userId: querySnapshot.get("userId") as string,
+  };
+
+  return projectList;
 }
 
 export async function getProjects() {
@@ -37,7 +46,7 @@ export async function getProjects() {
       id: doc.id,
       color: doc.get("color") as string,
       title: doc.get("title") as string,
-      taskslists: doc.get("tasksListIds") as TaskListType[],
+      taskslists: doc.get("taskslists") as TaskListType[],
       userId: doc.get("userId") as string,
     };
     projects.push(project);

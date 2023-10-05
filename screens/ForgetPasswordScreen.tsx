@@ -1,25 +1,21 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { Input } from "@rneui/base";
 import { Button } from "@rneui/themed";
+import { sendPasswordResetEmail } from "firebase/auth";
 import React, { useState } from "react";
-import {
-  Image,
-  Keyboard,
-  Platform,
-  StyleSheet,
-  useColorScheme,
-} from "react-native";
+import { Keyboard, Platform, StyleSheet, useColorScheme } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { createUser } from "../api/auth";
+import { auth } from "../api/auth";
+import CustomOverlay from "../components/Overlay";
 import { Text, View } from "../components/Themed";
 import Colors from "../constants/Colors";
+import { router } from "expo-router";
 
-export const AuthScreen = () => {
+export const ForgetPasswordScreen = () => {
   const colorScheme = useColorScheme();
   const [emailErr, setEmailErr] = useState("");
-  const [passwdErr, setpasswdErr] = useState("");
   const [emailField, setEmailField] = useState("");
-  const [passwdField, setPasswdField] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
 
   return (
     <SafeAreaView
@@ -36,16 +32,7 @@ export const AuthScreen = () => {
             borderRadius: 16,
             width: "80%",
           }}>
-          <Image
-            source={require("../assets/images/login.png")}
-            style={{
-              width: 60,
-              height: 60,
-              alignSelf: "center",
-              marginBottom: 16,
-            }}
-          />
-          <Text style={styles.title}>Sign Up</Text>
+          <Text style={styles.title}>Forget Password</Text>
           <View
             style={[
               styles.separator,
@@ -81,50 +68,36 @@ export const AuthScreen = () => {
             errorStyle={{ color: "red" }}
             errorMessage={emailErr}
           />
-          <Input
-            value={passwdField}
-            onChangeText={setPasswdField}
-            containerStyle={{
-              paddingHorizontal: 0,
-              width: "auto",
-              justifyContent: "center",
-              alignItems: "center",
-              marginBottom: 16,
-            }}
-            inputStyle={{
-              color: Colors[colorScheme ?? "light"].text,
-            }}
-            label={"Password"}
-            passwordRules={
-              "required: upper; required: lower; required: digit; max-consecutive: 2; minlength: 8;"
-            }
-            textContentType="password"
-            placeholder="abc.xyz@efg.fr"
-            errorStyle={{ color: "red" }}
-            secureTextEntry={true}
-            errorMessage={passwdErr}
-            leftIcon={
-              <FontAwesome
-                name="lock"
-                style={{
-                  color: Colors[colorScheme ?? "light"].text,
-                }}
-                size={24}
-              />
-            }
-            leftIconContainerStyle={{ marginRight: 8 }}
-          />
           <Button
             radius={"sm"}
             type="solid"
             onPress={() => {
               Keyboard.dismiss();
-              createUser(emailField, passwdField);
+              //   sendPasswordResetEmail(auth, emailField).then(() =>
+              //     setIsVisible(!isVisible)
+              //   );
+              router.push("/confirmPassword");
             }}>
-            Sign Up
+            Send Email Password Reset
           </Button>
         </View>
       </View>
+
+      <CustomOverlay
+        overlayStyle={{ width: "60%" }}
+        isVisible={isVisible}
+        onBackdropPress={() => setIsVisible(!isVisible)}>
+        <View style={{ backgroundColor: Colors[colorScheme ?? "light"].text }}>
+          <Text
+            style={{
+              fontSize: 18,
+              textAlign: "center",
+              color: Colors[colorScheme ?? "light"].background,
+            }}>
+            A mail has been sended. Check it out to reset your password !
+          </Text>
+        </View>
+      </CustomOverlay>
     </SafeAreaView>
   );
 };

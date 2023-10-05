@@ -5,6 +5,6 @@ export type TaskType = {
   title: string;
   images: string[];
   description: string;
-  color: string | "null";
+  color: string;
   badges: BadgeType[];
 };

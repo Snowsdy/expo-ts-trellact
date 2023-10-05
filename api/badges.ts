@@ -12,7 +12,7 @@ import { BadgeType } from "../types/BadgeType";
 
 export async function addBadge(task: BadgeType) {
   try {
-    const docRef = await addDoc(collection(db, "tasks"), {
+    const docRef = await addDoc(collection(db, "badges"), {
       title: task.title,
       color: task.color,
     });
@@ -22,25 +22,32 @@ export async function addBadge(task: BadgeType) {
 }
 
 export async function getBadges() {
-  const querySnapshot = await getDocs(collection(db, "tasks"));
-  let tasks: BadgeType[] = [];
+  const querySnapshot = await getDocs(collection(db, "badges"));
+  let badges: BadgeType[] = [];
   querySnapshot.forEach((doc) => {
-    let task: BadgeType = {
+    let badge: BadgeType = {
       id: doc.id,
       title: doc.get("title") as string,
       color: doc.get("color") as string,
     };
-    tasks.push(task);
+    badges.push(badge);
   });
 
   return {
-    tasks,
+    badges,
   };
 }
 
 export async function getBadgeById(id: string) {
   const badgeRef = doc(db, "badges", id);
-  return await getDoc(badgeRef);
+  const querySnapshot = await getDoc(badgeRef);
+  const badge: BadgeType = {
+    id: querySnapshot.id,
+    color: querySnapshot.get("color") as string,
+    title: querySnapshot.get("title") as string,
+  };
+
+  return badge;
 }
 
 export async function updateBadge(badge: BadgeType) {
@@ -57,5 +64,5 @@ export async function updateBadge(badge: BadgeType) {
 }
 
 export async function deleteBadge(id: string) {
-  await deleteDoc(doc(db, "tasks", id));
+  await deleteDoc(doc(db, "badges", id));
 }

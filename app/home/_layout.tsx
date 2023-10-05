@@ -22,6 +22,7 @@ export default function HomeLayout() {
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
         headerTitle: "Project",
+        headerTitleAlign: "center",
         headerLeft: () => {
           return (
             <Button
@@ -36,7 +37,7 @@ export default function HomeLayout() {
                 borderRadius: 8,
               }}
               iconPosition="left">
-              Quit
+              Log Out
             </Button>
           );
         },
@@ -63,6 +64,13 @@ export default function HomeLayout() {
         options={{
           title: "Select Project",
           tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
+        }}
+      />
+      <Tabs.Screen
+        name="settings"
+        options={{
+          title: "Settings",
+          tabBarIcon: ({ color }) => <TabBarIcon name="gear" color={color} />,
         }}
       />
     </Tabs>

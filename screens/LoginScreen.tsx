@@ -13,6 +13,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { signIn } from "../api/auth";
 import { Text, View } from "../components/Themed";
 import Colors from "../constants/Colors";
+import { router } from "expo-router";
 
 export const LoginScreen = () => {
   const colorScheme = useColorScheme();
@@ -98,8 +99,7 @@ export const LoginScreen = () => {
             passwordRules={
               "required: upper; required: lower; required: digit; max-consecutive: 2; minlength: 8;"
             }
-            textContentType="password"
-            placeholder="abc.xyz@efg.fr"
+            placeholder="***************"
             errorStyle={{ color: "red" }}
             secureTextEntry={true}
             errorMessage={passwdErr}
@@ -122,6 +122,15 @@ export const LoginScreen = () => {
               signIn(emailField, passwdField);
             }}>
             Log In
+          </Button>
+          <Button
+            radius={"sm"}
+            type="clear"
+            onPress={() => {
+              Keyboard.dismiss();
+              router.push("/resetPassword");
+            }}>
+            Forget Password ?
           </Button>
         </View>
       </View>

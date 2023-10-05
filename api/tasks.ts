@@ -8,8 +8,8 @@ import {
   runTransaction,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
-import { BadgeType } from "../types/BadgeType";
 import { TaskType } from "../types/TaskType";
+import { BadgeType } from "../types/BadgeType";
 
 export async function addTask(task: TaskType) {
   try {
@@ -47,7 +47,17 @@ export async function getTasks() {
 
 export async function getTaskById(id: string) {
   const taskRef = doc(db, "tasks", id);
-  return await getDoc(taskRef);
+  const querySnapshot = await getDoc(taskRef);
+  const task: TaskType = {
+    id: querySnapshot.id,
+    badges: querySnapshot.get("badges") as BadgeType[],
+    color: querySnapshot.get("color") as string,
+    description: querySnapshot.get("description") as string,
+    images: querySnapshot.get("images") as string[],
+    title: querySnapshot.get("title") as string,
+  };
+
+  return task;
 }
 
 export async function updateTask(task: TaskType) {

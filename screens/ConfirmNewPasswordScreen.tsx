@@ -1,25 +1,29 @@
 import { FontAwesome } from "@expo/vector-icons";
 import { Input } from "@rneui/base";
 import { Button } from "@rneui/themed";
+import { sendPasswordResetEmail } from "firebase/auth";
 import React, { useState } from "react";
-import {
-  Image,
-  Keyboard,
-  Platform,
-  StyleSheet,
-  useColorScheme,
-} from "react-native";
+import { Keyboard, Platform, StyleSheet, useColorScheme } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { createUser } from "../api/auth";
+import {
+  auth,
+  confirmResetPassword,
+  confirmResetPasswordCode,
+} from "../api/auth";
+import CustomOverlay from "../components/Overlay";
 import { Text, View } from "../components/Themed";
 import Colors from "../constants/Colors";
+import { router } from "expo-router";
 
-export const AuthScreen = () => {
+export const ConfirmNewPasswordScreen = () => {
   const colorScheme = useColorScheme();
-  const [emailErr, setEmailErr] = useState("");
-  const [passwdErr, setpasswdErr] = useState("");
-  const [emailField, setEmailField] = useState("");
+  const [codeErr, setCodeErr] = useState("");
+  const [codeField, setCodeField] = useState("");
+  const [email, setEmail] = useState("");
   const [passwdField, setPasswdField] = useState("");
+  const [passwdErr, setpasswdErr] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
+  const [tooglePassword, setTooglePassword] = useState(false);
 
   return (
     <SafeAreaView
@@ -36,16 +40,7 @@ export const AuthScreen = () => {
             borderRadius: 16,
             width: "80%",
           }}>
-          <Image
-            source={require("../assets/images/login.png")}
-            style={{
-              width: 60,
-              height: 60,
-              alignSelf: "center",
-              marginBottom: 16,
-            }}
-          />
-          <Text style={styles.title}>Sign Up</Text>
+          <Text style={styles.title}>Forget Password</Text>
           <View
             style={[
               styles.separator,
@@ -55,8 +50,8 @@ export const AuthScreen = () => {
             ]}
           />
           <Input
-            value={emailField}
-            onChangeText={setEmailField}
+            value={codeField}
+            onChangeText={setCodeField}
             containerStyle={{
               paddingHorizontal: 0,
               width: "auto",
@@ -68,7 +63,7 @@ export const AuthScreen = () => {
             }}
             leftIcon={
               <FontAwesome
-                name="user"
+                name="lock"
                 style={{
                   color: Colors[colorScheme ?? "light"].text,
                 }}
@@ -76,11 +71,33 @@ export const AuthScreen = () => {
               />
             }
             leftIconContainerStyle={{ marginRight: 8 }}
-            label={"Email"}
-            placeholder="abc.xyz@efg.fr"
+            label={"Code"}
             errorStyle={{ color: "red" }}
-            errorMessage={emailErr}
+            errorMessage={codeErr}
           />
+          <Button
+            radius={"sm"}
+            type="solid"
+            onPress={() => {
+              Keyboard.dismiss();
+              confirmResetPasswordCode(codeField).then((val) => {
+                setEmail(val);
+                setIsVisible(true);
+              });
+            }}>
+            Send Email Password Reset
+          </Button>
+        </View>
+      </View>
+
+      <CustomOverlay
+        overlayStyle={{ width: "60%" }}
+        isVisible={isVisible}
+        onBackdropPress={() => {
+          setIsVisible(!isVisible);
+          setPasswdField("");
+        }}>
+        <View style={{ backgroundColor: Colors[colorScheme ?? "light"].text }}>
           <Input
             value={passwdField}
             onChangeText={setPasswdField}
@@ -92,25 +109,45 @@ export const AuthScreen = () => {
               marginBottom: 16,
             }}
             inputStyle={{
-              color: Colors[colorScheme ?? "light"].text,
+              color: Colors[colorScheme ?? "light"].background,
             }}
-            label={"Password"}
+            label={"New Password"}
             passwordRules={
               "required: upper; required: lower; required: digit; max-consecutive: 2; minlength: 8;"
             }
-            textContentType="password"
-            placeholder="abc.xyz@efg.fr"
+            placeholder="***************"
             errorStyle={{ color: "red" }}
-            secureTextEntry={true}
+            secureTextEntry={!tooglePassword}
             errorMessage={passwdErr}
             leftIcon={
               <FontAwesome
                 name="lock"
                 style={{
-                  color: Colors[colorScheme ?? "light"].text,
+                  color: Colors[colorScheme ?? "light"].background,
                 }}
                 size={24}
               />
+            }
+            rightIcon={
+              tooglePassword === false ? (
+                <FontAwesome
+                  name="eye"
+                  onPress={() => setTooglePassword(!tooglePassword)}
+                  style={{
+                    color: Colors[colorScheme ?? "light"].background,
+                  }}
+                  size={24}
+                />
+              ) : (
+                <FontAwesome
+                  name="eye-slash"
+                  onPress={() => setTooglePassword(!tooglePassword)}
+                  style={{
+                    color: Colors[colorScheme ?? "light"].background,
+                  }}
+                  size={24}
+                />
+              )
             }
             leftIconContainerStyle={{ marginRight: 8 }}
           />
@@ -119,12 +156,16 @@ export const AuthScreen = () => {
             type="solid"
             onPress={() => {
               Keyboard.dismiss();
-              createUser(emailField, passwdField);
+              router.push("/(tabs)/");
+              confirmResetPassword(codeField, email).then(() => {
+                // TODO: Show succes Popup
+                router.push("/(tabs)/");
+              });
             }}>
-            Sign Up
+            Set New Password
           </Button>
         </View>
-      </View>
+      </CustomOverlay>
     </SafeAreaView>
   );
 };
