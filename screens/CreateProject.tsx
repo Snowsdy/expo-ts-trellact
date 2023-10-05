@@ -3,43 +3,42 @@
  * @note this page was created by Copilot to save time, had to fix three issues, all else is AI generated
  */
 
-import React, { useState } from 'react';
-import { Text, View, TextInput, Button, StyleSheet } from 'react-native';
-import { useColorScheme } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import Colors from '../constants/Colors';
-import { addTasksList } from '../api/taskslist';
-import { TaskListType } from '../types/TaskListType';
-import { TaskType } from '../types/TaskType';
-import Task from '../components/Task';
-import { useNavigation } from '@react-navigation/native';
-import { router } from 'expo-router';
-
-
+import React, { useState } from "react";
+import { Text, View, TextInput, Button, StyleSheet } from "react-native";
+import { useColorScheme } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import Colors from "../constants/Colors";
+import { addTasksList } from "../api/taskslist";
+import { TaskListType } from "../types/TaskListType";
+import { TaskType } from "../types/TaskType";
+import Task from "../components/Task";
+import { useNavigation } from "@react-navigation/native";
+import { router } from "expo-router";
 
 export function CreateProject() {
   const colorScheme = useColorScheme();
   const [taskList, setTaskList] = useState<TaskListType>({
-    id: '',
-    tasks: [],
-    title: '',
+    id: "",
+    title: "",
+    color: undefined,
+    projectId: "",
   });
-  const [taskTitle, setTaskTitle] = useState<string>('');
+  const [taskTitle, setTaskTitle] = useState<string>("");
 
   function addTask() {
     //TODO
   }
 
   function createProject() {
-    addTasksList(taskList).then(() => {
-        router.push('/home/');
-    });
+    router.push("/project/bovCjDkFuFhDKU0gtqvZ");
   }
 
-
-
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors[colorScheme ?? 'light'].background, }} >
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: Colors[colorScheme ?? "light"].background,
+      }}>
       <View style={styles.container}>
         <Text style={styles.title}>Create a new project</Text>
         <TextInput
@@ -48,17 +47,11 @@ export function CreateProject() {
           value={taskTitle}
           placeholder="Enter a task title"
         />
-        <Button title="Add task" onPress={addTask} />
-        {taskList.tasks.map((task) => (
-          <Task key={task.id} {...task} />
-        ))}
         <Button title="Create project" onPress={createProject} />
       </View>
     </SafeAreaView>
   );
 }
-
-
 
 const styles = StyleSheet.create({
   container: {
@@ -66,12 +59,12 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 20,
   },
   input: {
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: "gray",
     padding: 10,
     marginBottom: 20,
   },

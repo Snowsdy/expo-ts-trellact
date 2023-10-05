@@ -1,5 +1,5 @@
 import { CreateProject } from "../../screens/CreateProject";
 
-export default function TabTwoScreen() {
+export default function AddProjectScreen() {
   return <CreateProject />;
 }

@@ -55,6 +55,7 @@ function RootLayoutNav() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="home" options={{ headerShown: false }} />
+        <Stack.Screen name="project" options={{ headerShown: false }} />
         <Stack.Screen
           name="resetPassword"
           options={{ headerTitle: "Forget Password" }}
@@ -62,6 +63,19 @@ function RootLayoutNav() {
         <Stack.Screen
           name="confirmPassword"
           options={{ headerTitle: "Confirm Password" }}
+        />
+        <Stack.Screen
+          name="editProject"
+          options={{ headerTitle: "Edit Project" }}
+        />
+        <Stack.Screen
+          name="editTasklist"
+          options={{ headerTitle: "Edit Tasklist" }}
+        />
+        <Stack.Screen name="editTask" options={{ headerTitle: "Edit Task" }} />
+        <Stack.Screen
+          name="editBadge"
+          options={{ headerTitle: "Edit Badge" }}
         />
       </Stack>
     </ThemeProvider>

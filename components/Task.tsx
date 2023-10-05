@@ -2,7 +2,6 @@ import { Card } from "@rneui/base";
 import { CardDivider } from "@rneui/base/dist/Card/Card.Divider";
 import React from "react";
 import { Text, View } from "react-native";
-import { deleteTask } from "../api/tasks";
 import { TaskStyle } from "../constants/Task";
 import { TaskType } from "../types/TaskType";
 import { Button } from "@rneui/themed";
@@ -27,7 +26,6 @@ const Task: React.FC<TaskType> = ({
         }}>
         <Card.Title style={TaskStyle.titleTask}>{title}</Card.Title>
         <Button
-          onPress={() => deleteTask(taskId)}
           icon={{
             name: "trash",
             type: "font-awesome",

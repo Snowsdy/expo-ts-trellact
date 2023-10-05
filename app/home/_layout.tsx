@@ -21,7 +21,7 @@ export default function HomeLayout() {
       safeAreaInsets={{ top: 8, right: 8, bottom: 8, left: 8 }}
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        headerTitle: "Project",
+        headerTitle: "Home",
         headerTitleAlign: "center",
         headerLeft: () => {
           return (
@@ -44,26 +44,19 @@ export default function HomeLayout() {
         headerLeftContainerStyle: { paddingLeft: 16 },
       }}>
       <Tabs.Screen
-        name="index"
+        name="readProject"
         options={{
-          title: "Home",
-          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+          title: "Select Project",
+          tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="two"
+        name="addProject"
         options={{
           title: "Create Project",
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="plus-circle" color={color} />
           ),
-        }}
-      />
-      <Tabs.Screen
-        name="three"
-        options={{
-          title: "Select Project",
-          tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
         }}
       />
       <Tabs.Screen
