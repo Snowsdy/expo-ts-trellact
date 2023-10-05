@@ -16,7 +16,6 @@ export async function addBadge(task: BadgeType) {
       title: task.title,
       color: task.color,
     });
-    console.log("Document written with ID: ", docRef.id);
   } catch (e) {
     console.error("Error adding document: ", e);
   }
@@ -32,7 +31,6 @@ export async function getBadges() {
       color: doc.get("color") as string,
     };
     badges.push(badge);
-    console.log(`${doc.id} => ${doc.data()}`);
   });
 
   return {
