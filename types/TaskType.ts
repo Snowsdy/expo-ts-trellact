@@ -1,10 +1,8 @@
-import { BadgeType } from "./BadgeType";
-
 export type TaskType = {
   id: string | undefined;
+  tasklistId: string;
   title: string;
-  images: string[];
+  images: string[] | undefined;
   description: string;
-  color: string;
-  badges: BadgeType[];
+  color: string | undefined;
 };

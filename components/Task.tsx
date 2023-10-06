@@ -5,8 +5,10 @@ import { Text, View, TouchableOpacity, Image, Modal } from "react-native";
 import { deleteTask } from "../api/tasks";
 import { TaskStyle } from "../constants/Task";
 import { TaskType } from "../types/TaskType";
-import { Button, ButtonGroup, Icon } from "@rneui/themed";
+import { Button } from "@rneui/themed";
 import ImageViewer from "react-native-image-zoom-viewer";
+
+
 
 const Task: React.FC<TaskType> = ({
   id,
@@ -14,8 +16,10 @@ const Task: React.FC<TaskType> = ({
   images,
   description,
   color,
-  badges,
 }) => {
+  if (images == undefined) {
+    return;
+  }
   const taskId = id ? id : "";
   const colorTask = color ? color : "#999";
   const [isModalVisible, setModalVisible] = useState(false);
@@ -31,15 +35,27 @@ const Task: React.FC<TaskType> = ({
 
   return (
     <Card
-      containerStyle={[{ backgroundColor: colorTask }, TaskStyle.container]}
-    >
-      <View style={{flexDirection: "row", justifyContent: "space-between",  marginBottom: 5, }}>
+      containerStyle={[{ backgroundColor: colorTask }, TaskStyle.container]}>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          marginBottom: 5,
+        }}>
         <Card.Title style={TaskStyle.titleTask}>{title}</Card.Title>
-        <View style={{flexDirection: "row", justifyContent: "space-between", gap: 5,}}>
-            <Button  icon={{ name: "plus-circle", type: "font-awesome", size: 15, color: "#fff", }} accessibilityLabel="Add task" color="green"/>
-            <Button  icon={{ name: "pencil", type: "font-awesome", size: 15, color: "#fff", }} accessibilityLabel="Edit task"/>
-            <Button  icon={{ name: "trash", type: "font-awesome", size: 15, color: "#fff", }} accessibilityLabel="Delete task" color="red" />
-        </View>
+        <Button
+          onLongPress={() => {
+            deleteTask(taskId);
+          }}
+          icon={{
+            name: "trash",
+            type: "font-awesome",
+            size: 15,
+            color: "#fff",
+          }}
+          accessibilityLabel="Learn more about this purple button"
+          color="red"
+        />
       </View>
       <CardDivider></CardDivider>
       <View>

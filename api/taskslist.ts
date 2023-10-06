@@ -3,66 +3,61 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDoc,
   getDocs,
+  query,
   runTransaction,
+  where,
 } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { TaskListType } from "../types/TaskListType";
 import { TaskType } from "../types/TaskType";
+
+const TASKLIST_PATH = "tasklist";
 
 /**
  * @param tasksList
  * @returns a promise to let the opportunity to show a notification which alert the user of the added item.
  * @nothrow
  */
-export async function addTasksList(tasksList: TaskListType) {
+export async function addTasksList(tasksList: TaskListType): Promise<TaskListType | null> {
   try {
-    const docRef = await addDoc(collection(db, "taskslist"), {
+    const docRef = await addDoc(collection(db, TASKLIST_PATH), {
       title: tasksList.title,
-      tasks: tasksList.tasks,
+      color: tasksList.color,
+      projectId: tasksList.projectId,
     });
+    let tasklist: TaskListType = tasksList;
+    tasklist.id = docRef.id;
+
+    return tasklist;
   } catch (e) {
     console.error("Error adding document: ", e);
   }
+
+  return null;
 }
 
 /**
- * @brief fetch all TaskLists from Firebase
- * @returns {Promise<TaskListType[]>}
+ * @brief fetch all the TaskLists in a project from Firebase
+ * @param {string} projectId the id of the project to get the TaskLists from
+ * @returns {Promise<TaskListType[]>} all the TaskLists of the project
  */
-export async function getTasksLists() {
-  const querySnapshot = await getDocs(collection(db, "taskslist"));
-  let taskslists: TaskListType[] = [];
-  querySnapshot.forEach((doc) => {
-    let taskslist: TaskListType = {
-      id: doc.id,
-      title: doc.get("title") as string,
-      tasks: doc.get("tasks") as TaskType[],
-    };
-    taskslists.push(taskslist);
+export async function getTaskListsByProjectId(projectId: string): Promise<TaskListType[]> {
+  const collectionRef = collection(db, TASKLIST_PATH);
+  const q = query(collectionRef, where("projectId", "==", projectId));
+  const querySnapshot = await getDocs(q);
+  let tasklists: TaskListType[] = [];
+
+  querySnapshot.forEach((docRef) => {
+    tasklists.push({
+      id: docRef.id,
+      color: docRef.get("color") as string | undefined,
+      projectId: docRef.get("projectId") as string,
+      title: docRef.get("title") as string,
+    });
   });
 
-  return {
-    taskslists,
-  };
-}
-
-/**
- * @brief fetch a TaskList from Firebase using its id
- * @param {string} id the id of the TaskList to fetch
- * @returns {Promise<TaskListType>}
- */
-export async function getTaskListById(id: string) {
-  const taskslistRef = doc(db, "taskslist", id);
-  const querySnapshot = await getDoc(taskslistRef);
-  const tasksList: TaskListType = {
-    id: querySnapshot.id,
-    tasks: querySnapshot.get("tasks") as TaskType[],
-    title: querySnapshot.get("title") as string,
-  };
-
-  return tasksList;
+  return tasklists;
 }
 
 /**
@@ -71,8 +66,8 @@ export async function getTaskListById(id: string) {
  * @returns {Promise<void>}
  * @throws {string} if the document does not exists
  */
-export async function updateTaskList(taskslist: TaskType) {
-  const tasksListRef = doc(db, "taskslist", taskslist.id ? taskslist.id : "");
+export async function updateTaskList(taskslist: TaskType): Promise<void> {
+  const tasksListRef = doc(db, TASKLIST_PATH, taskslist.id ? taskslist.id : "");
   return await runTransaction(db, async (transaction) => {
     let data = await transaction.get(tasksListRef);
 
@@ -89,6 +84,6 @@ export async function updateTaskList(taskslist: TaskType) {
  * @param {string} id the id of the TaskList to delete
  * @returns {Promise<void>}
  */
-export async function deleteTasksList(id: string) {
-  await deleteDoc(doc(db, "taskslist", id));
+export async function deleteTasksList(id: string): Promise<void> {
+  await deleteDoc(doc(db, TASKLIST_PATH, id));
 }
