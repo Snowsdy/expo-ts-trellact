@@ -1,10 +1,8 @@
-import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { Button } from "@rneui/themed";
-import { Tabs } from "expo-router";
+import { FontAwesome } from "@expo/vector-icons";
+import { Tabs, router, useGlobalSearchParams } from "expo-router";
 import { useColorScheme } from "react-native";
-
-import { logOut } from "../../api/auth";
 import Colors from "../../constants/Colors";
+import { Button } from "@rneui/themed";
 
 function TabBarIcon(props: {
   name: React.ComponentProps<typeof FontAwesome>["name"];
@@ -13,57 +11,57 @@ function TabBarIcon(props: {
   return <FontAwesome size={28} style={{ marginBottom: -3 }} {...props} />;
 }
 
-export default function HomeLayout() {
+export default function ProjectLayout() {
   const colorScheme = useColorScheme();
+  const global = useGlobalSearchParams<{
+    projectId: string;
+    projectName: string;
+  }>();
 
   return (
     <Tabs
       safeAreaInsets={{ top: 8, right: 8, bottom: 8, left: 8 }}
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        headerTitle: "Home",
+        headerTitle: global.projectName,
         headerTitleAlign: "center",
         headerLeft: () => {
           return (
             <Button
               buttonStyle={{ backgroundColor: "transparent" }}
               onPress={() => {
-                logOut();
+                router.push("/home/");
               }}
-              icon={<TabBarIcon color="rgba(255,0,0,0.8)" name="angle-left" />}
+              icon={
+                <TabBarIcon
+                  color={Colors[colorScheme ?? "light"].text}
+                  name="angle-left"
+                />
+              }
               titleStyle={{
                 marginLeft: 8,
-                color: "rgba(255,0,0,0.8)",
+                color: Colors[colorScheme ?? "light"].text,
                 borderRadius: 8,
               }}
               iconPosition="left">
-              Log Out
+              Go Home
             </Button>
           );
         },
         headerLeftContainerStyle: { paddingLeft: 8 },
       }}>
       <Tabs.Screen
-        name="readProject"
+        name="[projectId]"
         options={{
-          title: "Select Project",
-          tabBarIcon: ({ color }) => <TabBarIcon name="book" color={color} />,
+          title: "Project",
+          tabBarIcon: ({ color }) => <TabBarIcon name="table" color={color} />,
         }}
       />
       <Tabs.Screen
-        name="addProject"
+        name="addTasklist"
         options={{
-          title: "Create Project",
-          tabBarIcon: ({ color }) => (
-            <TabBarIcon name="plus-circle" color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="settings"
-        options={{
-          title: "Settings",
-          tabBarIcon: ({ color }) => <TabBarIcon name="gear" color={color} />,
+          title: "Add Taskslist",
+          tabBarIcon: ({ color }) => <TabBarIcon name="list" color={color} />,
         }}
       />
     </Tabs>

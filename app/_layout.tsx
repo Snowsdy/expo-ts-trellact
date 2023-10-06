@@ -55,6 +55,7 @@ function RootLayoutNav() {
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="home" options={{ headerShown: false }} />
+        <Stack.Screen name="project" options={{ headerShown: false }} />
         <Stack.Screen
           name="resetPassword"
           options={{ headerTitle: "Forget Password" }}
