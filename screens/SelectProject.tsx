@@ -13,19 +13,20 @@ import { router } from "expo-router";
 import { useAuth } from "../hooks/useAuth";
 import { ScrollView } from "react-native-gesture-handler";
 
-function openProject(id: string | undefined) {
+function openProject(id: string | undefined, name: string) {
   if (id === undefined) return;
 
   router.push("/project/");
   router.setParams({
     projectId: id,
+    projectName: name,
   });
 }
 
 function ProjectCard({ project }: { project: ProjectType }) {
   return (
     <TouchableOpacity
-      onPress={() => openProject(project.id)}
+      onPress={() => openProject(project.id, project.title)}
       style={StyleSheet.compose(styles.projectCard, {
         backgroundColor: project.color,
       })}>

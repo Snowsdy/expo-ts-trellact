@@ -13,7 +13,7 @@ function TabBarIcon(props: {
 
 export default function ProjectLayout() {
   const colorScheme = useColorScheme();
-  const local = useGlobalSearchParams<{
+  const global = useGlobalSearchParams<{
     projectId: string;
     projectName: string;
   }>();
@@ -23,7 +23,7 @@ export default function ProjectLayout() {
       safeAreaInsets={{ top: 8, right: 8, bottom: 8, left: 8 }}
       screenOptions={{
         tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
-        headerTitle: local.projectName,
+        headerTitle: global.projectName,
         headerTitleAlign: "center",
         headerLeft: () => {
           return (

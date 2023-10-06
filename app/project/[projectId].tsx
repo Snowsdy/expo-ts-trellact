@@ -1,16 +1,18 @@
 import React from "react";
-import { Text, View } from "../../components/Themed";
 import { useGlobalSearchParams } from "expo-router";
+import ProjectScreen from "../../screens/ProjectScreen";
 
-const ProjectScreen = () => {
-  const local = useGlobalSearchParams<{
+const ProjectLayout = () => {
+  const global = useGlobalSearchParams<{
     projectId: string;
+    projectName: string;
   }>();
   return (
-    <View>
-      <Text>Voici l'id du projet : {local.projectId}</Text>
-    </View>
+    <ProjectScreen
+      projectId={global.projectId}
+      projectName={global.projectName}
+    />
   );
 };
 
-export default ProjectScreen;
+export default ProjectLayout;
