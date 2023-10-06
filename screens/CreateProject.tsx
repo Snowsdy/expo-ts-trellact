@@ -8,6 +8,59 @@ import { ProjectType } from "../types/ProjectType";
 import { addProject } from "../api/projectslist";
 import { router } from "expo-router";
 
+
+
+type ReactSetter = React.Dispatch<React.SetStateAction<string>>;
+
+/**
+ * @brief even handler for the creation of a new project
+ * @param {string} projectName the name of the project
+ * @param {string} color the color of the project
+ * @param {string} userId the id of the user
+ * @param {ReactSetter} setNameErr the setter for the name error message
+ * @param {ReactSetter} setColorErr the setter for the color error message
+ * @note this function will check if the name and the color are not empty
+ * and will set error messages if they are
+ * @returns {void}
+ */
+function onCreateProject(
+  projectName : string,
+  color       : string,
+  userId      : string,
+  setNameErr  : ReactSetter,
+  setColorErr : ReactSetter
+) {
+
+  if (projectName.length === 0) {
+    setNameErr("Veuillez remplir ce champ.");
+  }
+  if (color.length === 0) {
+    setColorErr("Veuillez remplir ce champ.");
+  }
+  if (color.length === 0 || projectName.length === 0) {
+    return;
+  }
+
+  const project: ProjectType = {
+    id: undefined,
+    userId: userId,
+    color: color,
+    title: projectName,
+  };
+
+  addProject(project).then((addedProject) => {
+    if (addedProject != null) {
+      router.push("/project/");
+      router.setParams({
+        projectId: addedProject.id ? addedProject.id : "",
+        projectName: addedProject.title,
+      });
+    }
+  });
+}
+
+
+
 export function CreateProject() {
   const userCredentials = useAuth();
   const colorScheme = useColorScheme();
@@ -54,33 +107,7 @@ export function CreateProject() {
           <Button
             radius={"sm"}
             type="solid"
-            onPress={() => {
-              if (projectName.length === 0) {
-                setNameErr("Veuillez remplir ce champ.");
-              }
-              if (color.length === 0) {
-                setColorErr("Veuillez remplir ce champ.");
-              }
-              // Do something
-              if (color.length > 0 && projectName.length > 0) {
-                const project: ProjectType = {
-                  id: undefined,
-                  userId: userId,
-                  color: color,
-                  title: projectName,
-                };
-
-                addProject(project).then((addedProject) => {
-                  if (addedProject != null) {
-                    router.push("/project/");
-                    router.setParams({
-                      projectId: addedProject.id ? addedProject.id : "",
-                      projectName: addedProject.title,
-                    });
-                  }
-                });
-              }
-            }}>
+            onPress={() => onCreateProject(projectName, color, userId, setNameErr, setColorErr)}>
             Create New Project
           </Button>
         </View>
@@ -88,6 +115,8 @@ export function CreateProject() {
     )
   );
 }
+
+
 
 const styles = StyleSheet.create({
   container: {

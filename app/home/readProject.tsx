@@ -1,5 +1,5 @@
-import { HomeScreen } from "../../screens/HomeScreen";
+import { SelectProject } from "../../screens/SelectProject";
 
 export default function ReadProjectScreen() {
-  return <HomeScreen />;
+  return <SelectProject />;
 }
