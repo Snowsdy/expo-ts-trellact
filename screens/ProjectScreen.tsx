@@ -6,13 +6,14 @@
  */
 
 import React, { useEffect, useState } from "react";
-import { Button, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Button, ScrollView, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getTaskListsByProjectId } from "../api/taskslist";
 import TasksList from "../components/TasksList";
 import Colors from "../constants/Colors";
 import { useAuth } from "../hooks/useAuth";
 import { TaskListType } from "../types/TaskListType";
+import { Text, View } from "../components/Themed";
 
 const ProjectScreen: React.FC<{ projectId: string; projectName: string }> = ({
   projectId,
@@ -64,6 +65,5 @@ const ProjectStyle = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
-    color: Colors.light.text,
   },
 });

@@ -1,10 +1,11 @@
 import { Card } from "@rneui/base";
 import { CardDivider } from "@rneui/base/dist/Card/Card.Divider";
 import React from "react";
-import { Text, View } from "react-native";
+import { Text, View, Image } from "react-native";
 import { TaskStyle } from "../constants/Task";
 import { TaskType } from "../types/TaskType";
 import { Button } from "@rneui/themed";
+import { deleteTask } from "../api/tasks";
 
 const Task: React.FC<TaskType> = ({
   id,
@@ -13,6 +14,9 @@ const Task: React.FC<TaskType> = ({
   description,
   color,
 }) => {
+  if (images == undefined) {
+    return;
+  }
   const taskId = id ? id : "";
   const colorTask = color ? color : "#999";
   return (
@@ -26,6 +30,9 @@ const Task: React.FC<TaskType> = ({
         }}>
         <Card.Title style={TaskStyle.titleTask}>{title}</Card.Title>
         <Button
+          onLongPress={() => {
+            deleteTask(taskId);
+          }}
           icon={{
             name: "trash",
             type: "font-awesome",
@@ -45,6 +52,7 @@ const Task: React.FC<TaskType> = ({
         <Text style={TaskStyle.descriptionTitleTask}>
           Image de description :
         </Text>
+        <Image source={{ uri: images[0], width: 200, height: 200 }} />
       </View>
     </Card>
   );
