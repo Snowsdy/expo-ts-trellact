@@ -43,19 +43,11 @@ const Task: React.FC<TaskType> = ({
           marginBottom: 5,
         }}>
         <Card.Title style={TaskStyle.titleTask}>{title}</Card.Title>
-        <Button
-          onLongPress={() => {
-            deleteTask(taskId);
-          }}
-          icon={{
-            name: "trash",
-            type: "font-awesome",
-            size: 15,
-            color: "#fff",
-          }}
-          accessibilityLabel="Learn more about this purple button"
-          color="red"
-        />
+        <View style={{flexDirection: "row", justifyContent: "space-between", gap: 5,}}>
+            <Button  icon={{ name: "plus-circle", type: "font-awesome", size: 15, color: "#fff", }} accessibilityLabel="Add task" color="green"/>
+            <Button  icon={{ name: "pencil", type: "font-awesome", size: 15, color: "#fff", }} accessibilityLabel="Edit task"/>
+            <Button  icon={{ name: "trash", type: "font-awesome", size: 15, color: "#fff", }} accessibilityLabel="Delete task" color="red" />
+        </View>
       </View>
       <CardDivider></CardDivider>
       <View>
