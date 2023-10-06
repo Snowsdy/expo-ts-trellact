@@ -9,6 +9,33 @@ import CustomOverlay from "../components/Overlay";
 import { Text, View } from "../components/Themed";
 import Colors from "../constants/Colors";
 import { useAuth } from "../hooks/useAuth";
+import { deleteProject, getProjectsByUserId } from "../api/projectslist";
+import { deleteTasksList, getTaskListsByProjectId } from "../api/taskslist";
+import { deleteTask, getTasksByTasklistId } from "../api/tasks";
+import { router } from "expo-router";
+
+async function deleteAccount(user: User): Promise<void> {
+  getProjectsByUserId(user.uid).then(async (projects) => {
+    projects.forEach(async (project) => {
+      getTaskListsByProjectId(project.id ? project.id : "").then(
+        (tasklists) => {
+          tasklists.forEach(async (tasklist) => {
+            getTasksByTasklistId(tasklist.id ? tasklist.id : "").then(
+              (tasks) => {
+                tasks.forEach(async (task) => {
+                  await deleteTask(task.id ? task.id : "");
+                  await deleteTasksList(tasklist.id ? tasklist.id : "");
+                  await deleteProject(project.id ? project.id : "");
+                });
+              }
+            );
+          });
+        }
+      );
+    });
+    await user.delete();
+  });
+}
 
 export const SettingScreen = () => {
   const colorScheme = useColorScheme();
@@ -19,7 +46,7 @@ export const SettingScreen = () => {
   const [passwdField, setPasswdField] = useState("");
   const [passwdErr, setpasswdErr] = useState("");
   const [togglePassword, setTogglePassword] = useState(false);
-  const [user, setUser] = useState<User>();
+  const [user, setUser] = useState<User | null>(null);
   const userCredentials = useAuth();
 
   useEffect(() => {
@@ -38,6 +65,12 @@ export const SettingScreen = () => {
       case OverlayAction.DELETE_ACCOUNT:
         // ? Supression des données & du compte
         setIsVisible(false);
+        if (user != null) {
+          deleteAccount(user).then(() => {
+            router.push("/(tabs)/");
+            alert("Account deleted.");
+          });
+        }
         break;
 
       case OverlayAction.CANCEL:
@@ -52,20 +85,32 @@ export const SettingScreen = () => {
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: Colors[colorScheme ?? "light"].background, }}>
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: Colors[colorScheme ?? "light"].background,
+      }}>
       <ListItem.Accordion
         containerStyle={{
           backgroundColor: Colors[colorScheme ?? "light"].background,
           columnGap: 8,
         }}
         icon={
-          <FontAwesome name="chevron-down" size={14} color={Colors[colorScheme ?? "light"].text} />
+          <FontAwesome
+            name="chevron-down"
+            size={14}
+            color={Colors[colorScheme ?? "light"].text}
+          />
         }
         android_disableSound
         leftRotate={false}
         content={
           <>
-            <FontAwesome name="user" size={18} color={Colors[colorScheme ?? "light"].text} />
+            <FontAwesome
+              name="user"
+              size={18}
+              color={Colors[colorScheme ?? "light"].text}
+            />
             <ListItem.Content>
               <ListItem.Title
                 style={{ color: Colors[colorScheme ?? "light"].text }}>
@@ -75,8 +120,7 @@ export const SettingScreen = () => {
           </>
         }
         isExpanded={expanded}
-        onPress={() => setExpanded(!expanded)}
-        >
+        onPress={() => setExpanded(!expanded)}>
         {user && (
           <ListItem
             onPress={() => setToggleUpdatePassword(!toggleUpdatePassword)}
@@ -98,7 +142,11 @@ export const SettingScreen = () => {
           </ListItem>
         )}
 
-        <ListItem onPress={() => setIsVisible(!isVisible)} containerStyle={{ backgroundColor: Colors[colorScheme ?? "light"].background, }}>
+        <ListItem
+          onPress={() => setIsVisible(!isVisible)}
+          containerStyle={{
+            backgroundColor: Colors[colorScheme ?? "light"].background,
+          }}>
           <Icon
             name="trash-can-outline"
             type="material-community"
@@ -112,11 +160,11 @@ export const SettingScreen = () => {
           <ListItem.Chevron />
         </ListItem>
       </ListItem.Accordion>
+
       <CustomOverlay
         overlayStyle={{ width: "60%" }}
         isVisible={isVisible}
-        onBackdropPress={() => setIsVisible(!isVisible)}
-        >
+        onBackdropPress={() => setIsVisible(!isVisible)}>
         <View style={{ backgroundColor: Colors[colorScheme ?? "light"].text }}>
           <Text
             style={{
