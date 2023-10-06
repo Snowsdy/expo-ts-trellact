@@ -33,9 +33,7 @@ export async function addTask(task: TaskType): Promise<TaskType | null> {
   return null;
 }
 
-export async function getTasksByTasklistId(
-  tasklistId: string
-): Promise<TaskType[]> {
+export async function getTasksByTasklistId(tasklistId: string): Promise<TaskType[]> {
   const collectionRef = collection(db, TASKS_PATH);
   const q = query(collectionRef, where("tasklistId", "==", tasklistId));
   const querySnapshot = await getDocs(q);

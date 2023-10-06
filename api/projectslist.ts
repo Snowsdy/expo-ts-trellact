@@ -13,9 +13,7 @@ import { ProjectType } from "../types/ProjectType";
 
 const PROJECT_PATH = "project";
 
-export async function addProject(
-  projectList: ProjectType
-): Promise<ProjectType | null> {
+export async function addProject(projectList: ProjectType): Promise<ProjectType | null> {
   try {
     const docRef = await addDoc(collection(db, PROJECT_PATH), {
       color: projectList.color,
@@ -33,9 +31,8 @@ export async function addProject(
   return null;
 }
 
-export async function getProjectsByUserId(
-  userId: string
-): Promise<ProjectType[]> {
+export async function getProjectsByUserId(userId: string): Promise<ProjectType[]> {
+  
   const projectRef = collection(db, PROJECT_PATH);
   const q = query(projectRef, where("userId", "==", userId));
   const querySnapshot = await getDocs(q);
@@ -53,6 +50,7 @@ export async function getProjectsByUserId(
 }
 
 export async function updateProject(project: ProjectType): Promise<void> {
+
   const projectRef = doc(db, PROJECT_PATH, project.id ? project.id : "");
   return await runTransaction(db, async (transaction) => {
     return await transaction.get(projectRef).then((data) => {

@@ -19,9 +19,7 @@ const TASKLIST_PATH = "tasklist";
  * @returns a promise to let the opportunity to show a notification which alert the user of the added item.
  * @nothrow
  */
-export async function addTasksList(
-  tasksList: TaskListType
-): Promise<TaskListType | null> {
+export async function addTasksList(tasksList: TaskListType): Promise<TaskListType | null> {
   try {
     const docRef = await addDoc(collection(db, TASKLIST_PATH), {
       title: tasksList.title,
@@ -39,13 +37,17 @@ export async function addTasksList(
   return null;
 }
 
-export async function getTaskListsByProjectId(
-  projectId: string
-): Promise<TaskListType[]> {
+/**
+ * @brief fetch all the TaskLists in a project from Firebase
+ * @param {string} projectId the id of the project to get the TaskLists from
+ * @returns {Promise<TaskListType[]>} all the TaskLists of the project
+ */
+export async function getTaskListsByProjectId(projectId: string): Promise<TaskListType[]> {
   const collectionRef = collection(db, TASKLIST_PATH);
   const q = query(collectionRef, where("projectId", "==", projectId));
   const querySnapshot = await getDocs(q);
   let tasklists: TaskListType[] = [];
+
   querySnapshot.forEach((docRef) => {
     tasklists.push({
       id: docRef.id,
