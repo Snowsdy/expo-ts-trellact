@@ -1,8 +1,43 @@
 import { Button, Input } from "@rneui/themed";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, useColorScheme } from "react-native";
+import { addTasksList } from "../api/taskslist";
 import { Text, View } from "../components/Themed";
 import Colors from "../constants/Colors";
+import { TaskListType } from "../types/TaskListType";
+
+type ReactSetter = React.Dispatch<React.SetStateAction<string>>;
+
+function onCreateTasklist(
+  projectId: string,
+  color: string,
+  name: string,
+  setNameErr: ReactSetter,
+  setColorErr: ReactSetter
+): void {
+  if (name.length === 0) {
+    setNameErr("Veuillez remplir ce champ.");
+  }
+  if (color.length === 0) {
+    setColorErr("Veuillez remplir ce champ.");
+  }
+  if (color.length === 0 || name.length === 0) {
+    return;
+  }
+
+  const tasklist: TaskListType = {
+    id: undefined,
+    color: color,
+    title: name,
+    projectId: projectId,
+  };
+
+  addTasksList(tasklist).then((addedTasklist) => {
+    if (addedTasklist != null) {
+      alert("Tasklist added.");
+    }
+  });
+}
 
 const CreateTaskslist: React.FC<{ projectId: string }> = ({ projectId }) => {
   const colorScheme = useColorScheme();
@@ -10,8 +45,6 @@ const CreateTaskslist: React.FC<{ projectId: string }> = ({ projectId }) => {
   const [color, setColor] = useState<string>("");
   const [tasklistErr, setTasklistErr] = useState<string>("");
   const [colorErr, setColorErr] = useState<string>("");
-
-  useEffect(() => {}, []);
 
   return (
     projectId != "" && (
@@ -41,8 +74,19 @@ const CreateTaskslist: React.FC<{ projectId: string }> = ({ projectId }) => {
             }}
             errorMessage={colorErr}
           />
-          <Button radius={"sm"} type="solid" onPress={() => {}}>
-            Create New Project
+          <Button
+            radius={"sm"}
+            type="solid"
+            onPress={() => {
+              onCreateTasklist(
+                projectId,
+                color,
+                tasklistName,
+                setTasklistErr,
+                setColorErr
+              );
+            }}>
+            Create New Tasklist
           </Button>
         </View>
       </View>
