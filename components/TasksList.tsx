@@ -2,14 +2,15 @@ import { Button, Input } from "@rneui/themed";
 import * as ImagePicker from "expo-image-picker";
 import React, { useEffect, useState } from "react";
 import { FlatList, Keyboard, StyleSheet, useColorScheme } from "react-native";
-import { addTask, getTasksByTasklistId, updateTask } from "../api/tasks";
+import { addTask, deleteTask, getTasksByTasklistId } from "../api/tasks";
 import Colors from "../constants/Colors";
 import { TaskListType } from "../types/TaskListType";
 import { TaskType } from "../types/TaskType";
 import CustomOverlay from "./Overlay";
 import Task from "./Task";
 import { Text, View } from "./Themed";
-import { updateTaskList } from "../api/taskslist";
+import { deleteTasksList, updateTaskList } from "../api/taskslist";
+import { router } from "expo-router";
 
 function addNewTask(
   tasklistId: string,
@@ -34,16 +35,17 @@ function addNewTask(
   });
 }
 
-const TasksList: React.FC<Pick<TaskListType, "id" | "title" | "color">> = ({
-  id,
-  title,
-  color,
-}) => {
+const TasksList: React.FC<TaskListType> = ({ id, title, color, projectId }) => {
   const colorScheme = useColorScheme();
   const [tasks, setTasks] = useState<TaskType[]>([]);
   const [taskOverlay, setTaskOverlay] = useState<boolean>(false);
+  const [tasklistOverlay, setTasklistOverlay] = useState<boolean>(false);
+  const [tasklistName, setTasklistName] = useState<string>(title);
+  const [tasklistColor, setTasklistColor] = useState<string>(
+    color ? color : ""
+  );
+  const [tasklistId, setTasklistId] = useState<string>(id ? id : "");
   const [taskName, setTaskName] = useState<string>("");
-  const [taskEditOverlay, setTaskEditOverlay] = useState<boolean>(false);
   const [description, setDescription] = useState<string>("");
   const [colorName, setColorName] = useState<string>("");
   const [images, setImages] = useState<string[]>([]);
@@ -82,13 +84,85 @@ const TasksList: React.FC<Pick<TaskListType, "id" | "title" | "color">> = ({
           { shadowColor: Colors[colorScheme ?? "light"].shadowColor },
         ]}>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-          <Text style={TasksListStyle.title}>{title}</Text>
+          <Text
+            style={[
+              TasksListStyle.title,
+              { color: Colors[colorScheme ?? "light"].text },
+            ]}>
+            {title}
+          </Text>
           <Button
             onPress={() => {
               setTaskOverlay(!taskOverlay);
             }}
             icon={{
               name: "plus",
+              type: "font-awesome",
+              size: 15,
+              color: "white",
+            }}
+            iconContainerStyle={{
+              padding: 0,
+            }}
+            buttonStyle={{
+              backgroundColor: "rgba(90, 154, 230, 1)",
+              borderColor: "transparent",
+              borderWidth: 0,
+              borderRadius: 8,
+              height: 35,
+              padding: 0,
+            }}
+            containerStyle={{
+              padding: 0,
+            }}
+          />
+          <Button
+            onPress={() => {
+              setTasklistOverlay(!tasklistOverlay);
+            }}
+            icon={{
+              name: "pencil",
+              type: "font-awesome",
+              size: 15,
+              color: "white",
+            }}
+            iconContainerStyle={{
+              padding: 0,
+            }}
+            buttonStyle={{
+              backgroundColor: "rgba(90, 154, 230, 1)",
+              borderColor: "transparent",
+              borderWidth: 0,
+              borderRadius: 8,
+              height: 35,
+              padding: 0,
+            }}
+            containerStyle={{
+              padding: 0,
+            }}
+          />
+          <Button
+            onPress={() => {
+              if (tasks.length > 0) {
+                tasks.forEach((task) => {
+                  deleteTask(task.id ? task.id : "").then(() => {
+                    deleteTasksList(id ? id : "").then(() => {
+                      alert(
+                        "Tasklist & tasks inside it removed. Back to selecting project."
+                      );
+                      router.push("/home/");
+                    });
+                  });
+                });
+              } else {
+                deleteTasksList(id ? id : "").then(() => {
+                  alert("Tasklist removed. Back to selecting project.");
+                  router.push("/home/");
+                });
+              }
+            }}
+            icon={{
+              name: "trash",
               type: "font-awesome",
               size: 15,
               color: "white",
@@ -209,17 +283,16 @@ const TasksList: React.FC<Pick<TaskListType, "id" | "title" | "color">> = ({
 
       <CustomOverlay
         overlayStyle={{ width: "60%" }}
-        isVisible={taskEditOverlay}
+        isVisible={tasklistOverlay}
         onBackdropPress={() => {
-          setTaskEditOverlay(!taskEditOverlay);
-          setColorName("");
-          setTaskName("");
-          setImages([]);
+          setTasklistOverlay(!tasklistOverlay);
+          setTasklistColor(color ? color : "");
+          setTasklistName(title);
         }}>
         <View style={{ backgroundColor: Colors[colorScheme ?? "light"].text }}>
           <Input
-            value={taskName}
-            onChangeText={setTaskName}
+            value={tasklistName}
+            onChangeText={setTasklistName}
             containerStyle={{
               paddingHorizontal: 0,
               width: "auto",
@@ -234,8 +307,8 @@ const TasksList: React.FC<Pick<TaskListType, "id" | "title" | "color">> = ({
             placeholder="My Task"
           />
           <Input
-            value={colorName}
-            onChangeText={setColorName}
+            value={tasklistColor}
+            onChangeText={setTasklistColor}
             containerStyle={{
               paddingHorizontal: 0,
               width: "auto",
@@ -249,50 +322,19 @@ const TasksList: React.FC<Pick<TaskListType, "id" | "title" | "color">> = ({
             label={"Color"}
             placeholder="#6F44D3"
           />
-          <Input
-            value={description}
-            onChangeText={setDescription}
-            containerStyle={{
-              paddingHorizontal: 0,
-              width: "auto",
-              justifyContent: "center",
-              alignItems: "center",
-              marginBottom: 16,
-            }}
-            inputStyle={{
-              color: Colors[colorScheme ?? "light"].background,
-            }}
-            label={"Description"}
-            allowFontScaling
-            multiline
-            placeholder="A little description to describe your task."
-          />
-          <Button
-            title="Pick an image from camera roll"
-            buttonStyle={{ marginBottom: 8, borderRadius: 4 }}
-            onPress={pickImage}
-          />
-          {images.length > 0 && (
-            <Text style={{ color: "black", marginBottom: 8 }}>
-              Image selected
-            </Text>
-          )}
           <Button
             radius={"sm"}
             type="solid"
             onPress={() => {
               Keyboard.dismiss();
-              updateTask({
-                id: undefined,
-                title: taskName,
-                color: colorName,
-                description: description,
-                images: images,
-                tasklistId: id ? id : "",
-              });
-              setTaskEditOverlay(!taskEditOverlay);
+              updateTaskList({
+                id: tasklistId,
+                color: tasklistColor,
+                title: tasklistName,
+                projectId: projectId,
+              }).then(() => setTasklistOverlay(!tasklistOverlay));
             }}>
-            Add New Task
+            Update Tasklist
           </Button>
         </View>
       </CustomOverlay>
@@ -319,9 +361,8 @@ const TasksListStyle = StyleSheet.create({
   title: {
     fontSize: 28,
     textAlign: "center",
-    color: "#000",
     fontWeight: "bold",
-    textTransform: "uppercase",
+    textTransform: "capitalize",
   },
 });
 

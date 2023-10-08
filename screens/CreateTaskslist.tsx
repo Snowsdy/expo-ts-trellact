@@ -5,6 +5,7 @@ import { addTasksList } from "../api/taskslist";
 import { Text, View } from "../components/Themed";
 import Colors from "../constants/Colors";
 import { TaskListType } from "../types/TaskListType";
+import { router } from "expo-router";
 
 type ReactSetter = React.Dispatch<React.SetStateAction<string>>;
 
@@ -35,6 +36,7 @@ function onCreateTasklist(
   addTasksList(tasklist).then((addedTasklist) => {
     if (addedTasklist != null) {
       alert("Tasklist added.");
+      router.push("/home/");
     }
   });
 }

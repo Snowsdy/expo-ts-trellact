@@ -6,14 +6,13 @@
  */
 
 import React, { useEffect, useState } from "react";
-import { Button, ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { getTaskListsByProjectId } from "../api/taskslist";
 import TasksList from "../components/TasksList";
-import Colors from "../constants/Colors";
+import { Text } from "../components/Themed";
 import { useAuth } from "../hooks/useAuth";
 import { TaskListType } from "../types/TaskListType";
-import { Text, View } from "../components/Themed";
 
 const ProjectScreen: React.FC<{ projectId: string; projectName: string }> = ({
   projectId,
@@ -37,12 +36,6 @@ const ProjectScreen: React.FC<{ projectId: string; projectName: string }> = ({
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
           <Text style={ProjectStyle.title}>{projectName}</Text>
-          <Button
-            title="Add Tasklist"
-            onPress={() => {
-              // TODO : Make a function that call the api and the state to refresh items.
-            }}
-          />
         </View>
 
         <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
@@ -65,5 +58,6 @@ const ProjectStyle = StyleSheet.create({
   title: {
     fontSize: 20,
     fontWeight: "bold",
+    backgroundColor: "transparent",
   },
 });
